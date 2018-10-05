@@ -113,6 +113,15 @@ public extension Graph {
         return []
     }
 
+    public func visit(fromIndex: Int, executing closure: @escaping (Int)->()) {
+        _ = dfs(fromIndex: fromIndex, goalTest: { _ in false }, reducer: { closure($0.v) })
+    }
+
+    public func visit(from: V, executing closure: @escaping (V)->()) {
+        guard let v = indexOfVertex(from) else { return }
+        visit(fromIndex: v, executing: { closure(self.vertexAtIndex($0))})
+    }
+
     /// Find a route from a vertex to the first that satisfies goalTest()
     /// using a breadth-first search.
     ///

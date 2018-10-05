@@ -180,6 +180,16 @@ class SwiftGraphSearchTests: XCTestCase {
         print(cityGraph2.edgesToVertices(edges: result))
     }
 
+    func testVisit() {
+        let cities = Set(cityGraph2.vertices)
+        var result = ["Seattle"]
+        cityGraph2.visit(from: "Seattle") { (v) in
+            result.append(v)
+        }
+        XCTAssertEqual(cities.count, result.count, "Not all cities visited")
+        XCTAssertTrue(cities == Set(result), "Not all cities visited")
+    }
+    
     func testDFSWithCycle() {
         let g = CompleteGraph.build(withVertices: ["A", "B", "C"])
 
