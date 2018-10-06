@@ -1,5 +1,5 @@
 //
-//  Queue.swift
+//  EdgeContainers.swift
 //  SwiftGraph
 //
 //  Copyright (c) 2014-2016 David Kopec
@@ -16,12 +16,49 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+/// An abstract edge container used to store the discovered edges whose destination vertex still
+/// has to be visited.
+public protocol EdgeContainer {
+    associatedtype E
+
+    /// Indicates wheter this container is a first-in-first-out container or a
+    /// last-in-first-out container.
+    ///
+    /// This property indicates in which order the discovered vertices need to be added
+    /// to the container container.
+    ///
+    /// If true, the container is a first-in-first-out container and
+    /// the vertices that must be visited first, must be added first.
+    /// If false, the container is a last-in-first-out container and
+    /// the vertices that must be visited first, must be added last.
+    static var isFIFO: Bool { get }
+
+    init()
+    func push(_ e: E)
+    func pop() -> E
+    var isEmpty: Bool { get }
+}
+
+/// Implements a stack - helper class that uses an array internally.
+public class Stack<T>: EdgeContainer {
+    private var container: [T] = [T]()
+
+    public static var isFIFO: Bool { get { return false } }
+
+    public required init() {}
+    public var isEmpty: Bool { return container.isEmpty }
+    public func push(_ thing: T) { container.append(thing) }
+    public func pop() -> T { return container.removeLast() }
+}
+
 /// Implements a queue - helper class that uses an array internally.
-public class Queue<T: Equatable> {
+public class Queue<T: Equatable>: EdgeContainer {
     private var container = [T]()
     private var head = 0
 
-    public init() {}
+    public static var isFIFO: Bool { get { return true } }
+
+    public required init() {}
 
     public var isEmpty: Bool {
         return count == 0
