@@ -203,7 +203,7 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     ///              If the return value is false, the neighbours of the vertex are not visited.
     public func visit(from initalVertex: V, executing closure: @escaping (V)->(Bool)) {
         guard let v = graph.indexOfVertex(initalVertex) else { return }
-        visit(fromIndex: v, executing: { closure(self.graph.vertexAtIndex($0))})
+        visit(from: v, executing: { closure(self.graph.vertexAtIndex($0))})
     }
 }
 
@@ -287,27 +287,23 @@ public extension Graph {
     /// - parameter fromIndex: The index of the starting vertex.
     /// - parameter goalTest: Returns true if a given vertex is a goal.
     /// - returns: An array of arrays of Edges containing routes to every vertex connected and passing goalTest(), or an empty array if no routes could be found
-    public func findAll(fromIndex: Int, goalTest: (V) -> Bool) -> [[E]] {
-        // pretty standard bfs that doesn't visit anywhere twice; pathDict tracks route
-        var visited: [Bool] = [Bool](repeating: false, count: vertexCount)
-        let queue: Queue<Int> = Queue<Int>()
+    public func findAll(fromIndex: Int, goalTest: @escaping (V) -> Bool) -> [[E]] {
+
         var pathDict: [Int: Edge] = [Int: Edge]()
         var paths: [[Edge]] = [[Edge]]()
-        queue.push(fromIndex)
-        while !queue.isEmpty {
-            let v: Int = queue.pop()
-            if goalTest(vertexAtIndex(v)) {
+
+        BFS(on: self).visit(from: fromIndex) { (v) -> (Bool) in
+            if goalTest(self.vertexAtIndex(v)) {
                 // figure out route of edges based on pathDict
                 paths.append(pathDictToPath(from: fromIndex, to: v, pathDict: pathDict))
             }
-            
-            for e in edgesForIndex(v) {
-                if !visited[e.v] {
-                    visited[e.v] = true
-                    queue.push(e.v)
+
+            for e in self.edgesForIndex(v) {
+                if pathDict[e.v] == nil {
                     pathDict[e.v] = e
                 }
             }
+            return true
         }
         return paths as! [[Self.E]]
     }
@@ -318,7 +314,7 @@ public extension Graph {
     /// - parameter from: The index of the starting vertex.
     /// - parameter goalTest: Returns true if a given vertex is a goal.
     /// - returns: An array of arrays of Edges containing routes to every vertex connected and passing goalTest(), or an empty array if no routes could be founding the entire route, or an empty array if no route could be found
-    public func findAll(from: V, goalTest: (V) -> Bool) -> [[E]] {
+    public func findAll(from: V, goalTest: @escaping (V) -> Bool) -> [[E]] {
         if let u = indexOfVertex(from) {
             return findAll(fromIndex: u, goalTest: goalTest)
         }

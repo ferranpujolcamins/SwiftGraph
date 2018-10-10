@@ -38,7 +38,7 @@ class SearchPerformanceTests: XCTestCase {
 
     func testBfsInStarGraphByIndex() {
         self.measure {
-            _ = starGraph.bfs(fromIndex: 0, toIndex: -1)
+            _ = starGraph.bfs(from: 0, to: -1)
         }
     }
 
@@ -50,7 +50,7 @@ class SearchPerformanceTests: XCTestCase {
 
     func testDfsInPathByIndex() {
         self.measure {
-            _ = pathGraph.dfs(fromIndex: 0, toIndex: -1)
+            _ = pathGraph.dfs(from: 0, to: -1)
         }
     }
 
