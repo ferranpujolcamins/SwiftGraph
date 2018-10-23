@@ -86,11 +86,22 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
         let container: C = edgeContainerFactory()
 
         func visitNeighbours(v: Int) {
-            var neighbours = visitOrder(graph.edgesForIndex(v))
-            if !C.isFIFO { neighbours.reverse() }
-            for e in neighbours {
-                if !visited[e.v] {
-                    container.push(e)
+            let neighbours = visitOrder(graph.edgesForIndex(v))
+            if C.isFIFO {
+                for i in 0..<neighbours.count {
+                    let e = neighbours[i]
+                    if !visited[e.v] {
+                        container.push(e)
+                        visited[e.v] = true
+                    }
+                }
+            } else {
+                for i in stride(from: neighbours.count-1, to: -1, by: -1) {
+                    let e = neighbours[i]
+                    if !visited[e.v] {
+                        container.push(e)
+                        visited[e.v] = true
+                    }
                 }
             }
         }
