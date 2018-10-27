@@ -96,17 +96,17 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
                     }
                 }
             } else {
+                visited[v] = true
                 for i in stride(from: neighbours.count-1, to: -1, by: -1) {
                     let e = neighbours[i]
                     if !visited[e.v] {
                         container.push(e)
-                        visited[e.v] = true
                     }
                 }
             }
         }
 
-        // Dfs
+        // Traversal
 
         visited[initalVertex] = true
         visitNeighbours(v: initalVertex)
@@ -114,6 +114,9 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
         while !container.isEmpty {
             let edge: E = container.pop()
             let v = edge.v
+            if !C.isFIFO && visited[v] {
+                continue
+            }
             let shouldVisitNeighbours = reducer(edge)
             if goalTest(v) {
                 return v
