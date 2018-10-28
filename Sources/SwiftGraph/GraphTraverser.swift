@@ -66,6 +66,28 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
         return dfs
     }
 
+    private func visitNeighboursFIFO(v: Int, container: C, visited: inout [Bool]) {
+        let neighbours = visitOrder(graph.edgesForIndex(v))
+        for i in 0..<neighbours.count {
+            let e = neighbours[i]
+            if !visited[e.v] {
+                container.push(e)
+                visited[e.v] = true
+            }
+        }
+    }
+
+    func visitNeighboursLIFO(v: Int, container: C, visited: inout [Bool]) {
+        let neighbours = visitOrder(graph.edgesForIndex(v))
+        visited[v] = true
+        for i in stride(from: neighbours.count-1, to: -1, by: -1) {
+            let e = neighbours[i]
+            if !visited[e.v] {
+                container.push(e)
+            }
+        }
+    }
+
     /// Perform a computation over the graph visiting the vertices using a
     /// depth-first algorithm.
     ///
@@ -85,31 +107,14 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
         let container: C = edgeContainerFactory()
 
-        func visitNeighbours(v: Int) {
-            let neighbours = visitOrder(graph.edgesForIndex(v))
-            if C.isFIFO {
-                for i in 0..<neighbours.count {
-                    let e = neighbours[i]
-                    if !visited[e.v] {
-                        container.push(e)
-                        visited[e.v] = true
-                    }
-                }
-            } else {
-                visited[v] = true
-                for i in stride(from: neighbours.count-1, to: -1, by: -1) {
-                    let e = neighbours[i]
-                    if !visited[e.v] {
-                        container.push(e)
-                    }
-                }
-            }
-        }
-
         // Traversal
 
         visited[initalVertex] = true
-        visitNeighbours(v: initalVertex)
+        if C.isFIFO {
+            visitNeighboursFIFO(v: initalVertex, container: container, visited: &visited)
+        } else {
+            visitNeighboursLIFO(v: initalVertex, container: container, visited: &visited)
+        }
 
         while !container.isEmpty {
             let edge: E = container.pop()
@@ -122,7 +127,11 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
                 return v
             }
             if shouldVisitNeighbours {
-                visitNeighbours(v: v)
+                if C.isFIFO {
+                    visitNeighboursFIFO(v: v, container: container, visited: &visited)
+                } else {
+                    visitNeighboursLIFO(v: v, container: container, visited: &visited)
+                }
             }
         }
         return nil // no route found
