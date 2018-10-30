@@ -16,10 +16,56 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+public protocol NeighboursVisitor {
+    associatedtype C: EdgeContainer
+    associatedtype G: Graph where G.E == C.E
+    static func visitNeighboursFIFO(v: Int,
+                                    graph: G,
+                                    container: C,
+                                    visitOrder: ([G.E]) -> [G.E],
+                                    visited: inout [Bool])
+}
+
+public enum FIFONeighboursVisitor<C: EdgeContainer, G: Graph>: NeighboursVisitor where G.E == C.E {
+    public static func visitNeighboursFIFO(v: Int,
+                                           graph: G,
+                                           container: C,
+                                           visitOrder: ([C.E]) -> [C.E],
+                                           visited: inout [Bool]) {
+        let neighbours = visitOrder(graph.edgesForIndex(v))
+        for i in 0..<neighbours.count {
+            let e = neighbours[i]
+            if !visited[e.v] {
+                container.push(e)
+                visited[e.v] = true
+            }
+        }
+    }
+}
+
+public enum LIFONeighboursVisitor<C: EdgeContainer, G: Graph>: NeighboursVisitor where G.E == C.E {
+    public static func visitNeighboursFIFO(v: Int,
+                                           graph: G,
+                                           container: C,
+                                           visitOrder: ([C.E]) -> [C.E],
+                                           visited: inout [Bool]) {
+        let neighbours = visitOrder(graph.edgesForIndex(v))
+        visited[v] = true
+        for i in stride(from: neighbours.count-1, to: -1, by: -1) {
+            let e = neighbours[i]
+            if !visited[e.v] {
+                container.push(e)
+            }
+        }
+    }
+}
+
+
 /// An abstract edge container used to store the discovered edges whose destination vertex still
 /// has to be visited.
 public protocol EdgeContainer {
     associatedtype E
+    associatedtype Visitor: NeighboursVisitor where Visitor.C == Self
 
     /// Indicates wheter this container is a first-in-first-out container or a
     /// last-in-first-out container.
@@ -40,7 +86,11 @@ public protocol EdgeContainer {
 }
 
 /// Implements a stack - helper class that uses an array internally.
-public class Stack<T>: EdgeContainer {
+public class Stack<T, G: Graph>: EdgeContainer where T == G.E {
+    public typealias E = T
+    public typealias Visitor = LIFONeighboursVisitor<Stack<T, G>, G>
+
+
     private var container: [T] = [T]()
 
     public static var isFIFO: Bool { get { return false } }
@@ -53,6 +103,8 @@ public class Stack<T>: EdgeContainer {
 
 /// Implements a queue - helper class that uses an array internally.
 public class Queue<T: Equatable>: EdgeContainer {
+    public typealias Visitor = FIFONeighboursVisitor
+
     private var container = [T]()
     private var head = 0
 

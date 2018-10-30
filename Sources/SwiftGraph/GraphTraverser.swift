@@ -110,11 +110,7 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
         // Traversal
 
         visited[initalVertex] = true
-        if C.isFIFO {
-            visitNeighboursFIFO(v: initalVertex, container: container, visited: &visited)
-        } else {
-            visitNeighboursLIFO(v: initalVertex, container: container, visited: &visited)
-        }
+        C.Visitor.visitNeighboursFIFO(v: initalVertex, graph: graph, container: container, visitOrder: visitOrder, visited: &visited)
 
         while !container.isEmpty {
             let edge: E = container.pop()
@@ -127,11 +123,7 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
                 return v
             }
             if shouldVisitNeighbours {
-                if C.isFIFO {
-                    visitNeighboursFIFO(v: v, container: container, visited: &visited)
-                } else {
-                    visitNeighboursLIFO(v: v, container: container, visited: &visited)
-                }
+                C.Visitor.visitNeighboursFIFO(v: v, graph: graph, container: container, visitOrder: visitOrder, visited: &visited)
             }
         }
         return nil // no route found
