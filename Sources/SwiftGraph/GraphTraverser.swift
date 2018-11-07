@@ -97,11 +97,11 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     ///                      is the edge from the previous vertex to the visited vertex.
     ///                      If the return value is false, the neighbours of the vertex are not visited.
     /// - returns: The index of the first vertex found to satisfy goalTest or nil if no vertex is found.
-    public func from(_ initalVertex: Int, goalTest: (Int) -> Bool, reducer: (E)->(Bool)) -> Int? {
+    public func from(_ initalVertexIndex: Int, goalTest: (Int) -> Bool, reducer: (E)->(Bool)) -> Int? {
         // Setup
 
-        if goalTest(initalVertex) {
-            return initalVertex
+        if goalTest(initalVertexIndex) {
+            return initalVertexIndex
         }
 
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
@@ -109,11 +109,11 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
 
         // Traversal
 
-        visited[initalVertex] = true
+        visited[initalVertexIndex] = true
         if C.isFIFO {
-            visitNeighboursFIFO(v: initalVertex, container: container, visited: &visited)
+            visitNeighboursFIFO(v: initalVertexIndex, container: container, visited: &visited)
         } else {
-            visitNeighboursLIFO(v: initalVertex, container: container, visited: &visited)
+            visitNeighboursLIFO(v: initalVertexIndex, container: container, visited: &visited)
         }
 
         while !container.isEmpty {
@@ -143,15 +143,15 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     /// - parameter fromIndex: The index of the starting vertex.
     /// - parameter goalTest: Returns true if a given vertex index is a goal.
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
-    public func from(_ initalVertex: Int, goalTest: (Int) -> Bool) -> [E] {
+    public func from(index: Int, goalTest: (Int) -> Bool) -> [E] {
         // pretty standard dfs that doesn't visit anywhere twice; pathDict tracks route
         var pathDict:[Int: E] = [:]
-        let result = from(initalVertex, goalTest: goalTest, reducer: { (e: E) -> Bool in
+        let result = from(index, goalTest: goalTest, reducer: { (e: E) -> Bool in
             pathDict[e.v] = e
             return true
         })
         if let vertexFound = result {
-            return pathDictToPath(from: initalVertex, to: vertexFound, pathDict: pathDict) as! [E]
+            return pathDictToPath(from: index, to: vertexFound, pathDict: pathDict) as! [E]
         }
         return []
     }
@@ -162,8 +162,8 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     /// - parameter fromIndex: The index of the starting vertex.
     /// - parameter goalTest: Returns true if a given vertex is a goal.
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
-    public func from(_ initalVertex: Int, goalTest: (V) -> Bool) -> [E] {
-        return from(initalVertex, goalTest: { goalTest(graph.vertexAtIndex($0)) })
+    public func from(index: Int, goalTest: (V) -> Bool) -> [E] {
+        return from(index: index, goalTest: { goalTest(graph.vertexAtIndex($0)) })
     }
 
     /// Find a route from a vertex to the first that satisfies goalTest()
@@ -174,7 +174,7 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
     public func from(_ initalVertex: V, goalTest: (V) -> Bool) -> [E] {
         if let u = graph.indexOfVertex(initalVertex) {
-            return from(u, goalTest: goalTest)
+            return from(index: u, goalTest: goalTest)
         }
         return []
     }
@@ -184,8 +184,8 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     /// - parameter fromIndex: The index of the starting vertex.
     /// - parameter toIndex: The index of the ending vertex.
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
-    public func from(_ initalVertex: Int, to: Int) -> [E] {
-        return from(initalVertex, goalTest: { $0 == to })
+    public func from(index: Int, toIndex: Int) -> [E] {
+        return from(index: index, goalTest: { $0 == toIndex })
     }
 
     /// Find a route from one vertex to another using a depth-first search.
@@ -196,7 +196,7 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     public func from(_ initalVertex: V, to: V) -> [E] {
         if let u = graph.indexOfVertex(initalVertex) {
             if let v = graph.indexOfVertex(to) {
-                return from(u, to: v)
+                return from(index: u, toIndex: v)
             }
         }
         return []
@@ -210,9 +210,9 @@ public struct GraphTraverser<G: Graph, C: EdgeContainer> where C.E == G.E {
     ///   - closure: The closure to execute on each visited vertex. Takes the index of
     ///              the visited vertex as input parameter.
     ///              If the return value is false, the neighbours of the vertex are not visited.
-    public func visit(from initalVertex: Int, executing closure: @escaping (Int)->(Bool)) {
-        if closure(initalVertex) {
-            _ = from(initalVertex, goalTest: { _ in false }, reducer: { closure($0.v) })
+    public func visit(from index: Int, executing closure: @escaping (Int)->(Bool)) {
+        if closure(index) {
+            _ = from(index, goalTest: { _ in false }, reducer: { closure($0.v) })
         }
     }
 
@@ -246,6 +246,10 @@ public extension Graph {
         return DFS(on: self).from(from, goalTest: goalTest)
     }
 
+    public func dfs(fromIndex: Int, goalTest: (V) -> Bool) -> [E] {
+        return DFS(on: self).from(index: fromIndex, goalTest: goalTest)
+    }
+
     /// Find a route from one vertex to another using a depth-first search.
     ///
     /// The order in which the neighbours of a vertex are visited is undetermined.
@@ -255,6 +259,10 @@ public extension Graph {
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
     public func dfs(from: V, to: V) -> [E] {
         return DFS(on: self).from(from, to: to)
+    }
+
+    public func dfs(fromIndex: Int, toIndex: Int) -> [E] {
+        return DFS(on: self).from(index: fromIndex, toIndex: toIndex)
     }
 
     /// Visit all reachable vertices from the initial vertex in depth-first search order
@@ -281,6 +289,10 @@ public extension Graph {
         return BFS(on: self).from(from, goalTest: goalTest)
     }
 
+    public func bfs(fromIndex: Int, goalTest: (V) -> Bool) -> [E] {
+        return BFS(on: self).from(index: fromIndex, goalTest: goalTest)
+    }
+
     /// Find a route from one vertex to another using a breadth-first search.
     ///
     /// - parameter from: The starting vertex.
@@ -288,6 +300,10 @@ public extension Graph {
     /// - returns: An array of Edges containing the entire route, or an empty array if no route could be found
     public func bfs(from: V, to: V) -> [E] {
         return BFS(on: self).from(from, to: to)
+    }
+
+    public func bfs(fromIndex: V, toIndex: V) -> [E] {
+        return BFS(on: self).from(fromIndex, to: toIndex)
     }
 
     /// Visit all reachable vertices from the initial vertex in breadth-first search order
