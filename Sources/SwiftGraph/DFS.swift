@@ -43,6 +43,11 @@ public struct DFS<G: Graph>: GraphTraverser {
     public let graph: G
 
     public func from(_ initalVertexIndex: Int, goalTest: (Int) -> Bool, reducer: G.Reducer) -> Int? {
+
+        let dfs = Dfs(on: graph)
+        return dfs.from(initalVertexIndex, goalTest: goalTest, reducer: reducer)
+
+
         // Setup
 
         if goalTest(initalVertexIndex) {

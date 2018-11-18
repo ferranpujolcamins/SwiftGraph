@@ -2,30 +2,40 @@ func {{ specialization.signature }} {
         {{ "initalVertexIndex"|GOAL_TEST }}
 
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
-        let container = Stack<E>()
+        let container = {{ algorithm.createContainer }}
 
         visited[initalVertexIndex] = true
         let neighbours = graph.edgesForIndex(initalVertexIndex)
         for e in neighbours {
             if !visited[e.v] {
-                container.push(e)
+                {{ "e"|PUSH_TO_CONTAINER }}
+              {% if algorithm.markAsVisitedOnPush %}
+                visited[e.v] = true
+              {% endif %}
             }
         }
 
         while !container.isEmpty {
             let edge: E = container.pop()
             let v = edge.v
+            
+          {% if not algorithm.markAsVisitedOnPush %}
             if visited[v] {
                 continue
             }
+            visited[v] = true   
+          {% endif %}
+
             let shouldVisitNeighbours = reducer(edge)
             {{ "v"|GOAL_TEST }}
             if shouldVisitNeighbours {
-                visited[v] = true
                 let neighbours = graph.edgesForIndex(v)
                 for e in neighbours {
                     if !visited[e.v] {
-                        container.push(e)
+                        {{ "e"|PUSH_TO_CONTAINER }}
+                      {% if algorithm.markAsVisitedOnPush %}
+                        visited[e.v] = true
+                      {% endif %}
                     }
                 }
             }

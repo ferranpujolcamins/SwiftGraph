@@ -44,6 +44,7 @@
 		B55E3B4D21A1887A004FAB61 /* Dfs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55E3B4C21A1887A004FAB61 /* Dfs.swift */; };
 		B58A391B21987D7E0045B9FB /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58A391921987D7E0045B9FB /* Stack.swift */; };
 		B58A391C21987D7E0045B9FB /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58A391A21987D7E0045B9FB /* Queue.swift */; };
+		B5BE8C6221A1C32E00070BAF /* Bfs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BE8C6121A1C32D00070BAF /* Bfs.swift */; };
 		B5D022B1217357480079F17C /* ConstructorsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */; };
 		B5D229BC207BF30100151820 /* UniqueElementsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D229BB207BF30100151820 /* UniqueElementsGraph.swift */; };
 		B5D229BF207BF3A800151820 /* UniqueElementsGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D229BD207BF36900151820 /* UniqueElementsGraphTests.swift */; };
@@ -133,6 +134,7 @@
 		B55E3B4C21A1887A004FAB61 /* Dfs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dfs.swift; sourceTree = "<group>"; };
 		B58A391921987D7E0045B9FB /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Sources/SwiftGraph/Stack.swift; sourceTree = SOURCE_ROOT; };
 		B58A391A21987D7E0045B9FB /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Queue.swift; path = Sources/SwiftGraph/Queue.swift; sourceTree = SOURCE_ROOT; };
+		B5BE8C6121A1C32D00070BAF /* Bfs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bfs.swift; sourceTree = "<group>"; };
 		B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructorsPerformanceTests.swift; sourceTree = "<group>"; };
 		B5D229BB207BF30100151820 /* UniqueElementsGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UniqueElementsGraph.swift; path = Sources/SwiftGraph/UniqueElementsGraph.swift; sourceTree = SOURCE_ROOT; };
 		B5D229BD207BF36900151820 /* UniqueElementsGraphTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniqueElementsGraphTests.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 		B55E3B4E21A1887F004FAB61 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
+				B5BE8C6121A1C32D00070BAF /* Bfs.swift */,
 				B55E3B4C21A1887A004FAB61 /* Dfs.swift */,
 			);
 			name = Generated;
@@ -550,6 +553,7 @@
 				7985B9271E5A503200C100E7 /* SwiftPriorityQueue.swift in Sources */,
 				B5560B302197B3BC003B13F1 /* BFS.swift in Sources */,
 				55DCCBF61F8ADA12001913F7 /* Cycle.swift in Sources */,
+				B5BE8C6221A1C32E00070BAF /* Bfs.swift in Sources */,
 				B5560B322197B4D1003B13F1 /* Dijkstra.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

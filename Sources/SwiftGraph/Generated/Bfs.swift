@@ -1,4 +1,4 @@
-struct Dfs<G: Graph> {
+struct Bfs<G: Graph> {
     typealias V = G.V
     typealias E = G.E
 
@@ -14,24 +14,21 @@ struct Dfs<G: Graph> {
         }
 
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
-        let container = Stack<E>()
+        let container = Queue<E>()
 
         visited[initalVertexIndex] = true
         let neighbours = graph.edgesForIndex(initalVertexIndex)
         for e in neighbours {
             if !visited[e.v] {
                 container.push(e)
+
+                visited[e.v] = true
             }
         }
 
         while !container.isEmpty {
             let edge: E = container.pop()
             let v = edge.v
-
-            if visited[v] {
-                continue
-            }
-            visited[v] = true
 
             let shouldVisitNeighbours = reducer(edge)
             if goalTest(v) {
@@ -42,6 +39,8 @@ struct Dfs<G: Graph> {
                 for e in neighbours {
                     if !visited[e.v] {
                         container.push(e)
+
+                        visited[e.v] = true
                     }
                 }
             }
@@ -51,24 +50,21 @@ struct Dfs<G: Graph> {
 
     func from(_ initalVertexIndex: Int, reducer: G.Reducer) -> Int? {
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
-        let container = Stack<E>()
+        let container = Queue<E>()
 
         visited[initalVertexIndex] = true
         let neighbours = graph.edgesForIndex(initalVertexIndex)
         for e in neighbours {
             if !visited[e.v] {
                 container.push(e)
+
+                visited[e.v] = true
             }
         }
 
         while !container.isEmpty {
             let edge: E = container.pop()
             let v = edge.v
-
-            if visited[v] {
-                continue
-            }
-            visited[v] = true
 
             let shouldVisitNeighbours = reducer(edge)
 
@@ -77,6 +73,8 @@ struct Dfs<G: Graph> {
                 for e in neighbours {
                     if !visited[e.v] {
                         container.push(e)
+
+                        visited[e.v] = true
                     }
                 }
             }

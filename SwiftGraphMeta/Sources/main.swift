@@ -15,8 +15,8 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
+
 import Foundation
-import SwiftFormat
 
 guard CommandLine.arguments.count >= 2 else {
     print("Missing templates path argument")
@@ -36,50 +36,9 @@ guard CommandLine.arguments.count == 3 else {
 let templatesPath = CommandLine.arguments[1]
 let outPath = CommandLine.arguments[2]
 
-func write(_ file: GeneratedFile) {
-    guard let outputData = formatSource(file.content).data(using: String.Encoding.utf8) else {
-        print("Unable to encode content to UTF8")
-        exit(5)
-    }
-
-    let filePath = outPath + file.filename
-
-    if FileManager.default.fileExists(atPath: filePath) {
-        do {
-            try FileManager.default.removeItem(atPath: filePath)
-        } catch let error {
-            print("Unable to overwrite file at: \(filePath)")
-            print(error)
-            exit(3)
-        }
-    }
-    FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
-
-    guard let file = FileHandle(forWritingAtPath: filePath) else {
-        print("Unable to write at: \(filePath)")
-        exit(4)
-    }
-
-    file.write(outputData)
-
-    print("File written: \(filePath)")
-}
-
-func formatSource(_ source: String) -> String {
-    let tokens = tokenize(source)
-    let rules = FormatRules.all
-    let formatOptions = FormatOptions.default
-    let newTokens = try! applyRules(rules, to: tokens, with: formatOptions)
-    return sourceCode(for: newTokens)
-}
-
-struct GeneratedFile {
-    let filename: String
-    let content: String
-}
-
 let files = [
-    GeneratedFile(filename: dfs.name + ".swift", content: dfs.render())
+    GeneratedFile(filename: dfs.name + ".swift", content: dfs.render()),
+    GeneratedFile(filename: bfs.name + ".swift", content: bfs.render())
 ]
 
 files.forEach(write)
