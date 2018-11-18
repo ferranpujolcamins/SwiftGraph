@@ -41,6 +41,7 @@
 		B5560B2E2197B305003B13F1 /* DFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5560B2D2197B304003B13F1 /* DFS.swift */; };
 		B5560B302197B3BC003B13F1 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5560B2F2197B3BC003B13F1 /* BFS.swift */; };
 		B5560B322197B4D1003B13F1 /* Dijkstra.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5560B312197B4D1003B13F1 /* Dijkstra.swift */; };
+		B55E3B4D21A1887A004FAB61 /* Dfs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55E3B4C21A1887A004FAB61 /* Dfs.swift */; };
 		B58A391B21987D7E0045B9FB /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58A391921987D7E0045B9FB /* Stack.swift */; };
 		B58A391C21987D7E0045B9FB /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58A391A21987D7E0045B9FB /* Queue.swift */; };
 		B5D022B1217357480079F17C /* ConstructorsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */; };
@@ -129,6 +130,7 @@
 		B5560B2D2197B304003B13F1 /* DFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DFS.swift; path = ../Sources/SwiftGraph/DFS.swift; sourceTree = "<group>"; };
 		B5560B2F2197B3BC003B13F1 /* BFS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BFS.swift; path = ../Sources/SwiftGraph/BFS.swift; sourceTree = "<group>"; };
 		B5560B312197B4D1003B13F1 /* Dijkstra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dijkstra.swift; path = ../Sources/SwiftGraph/Dijkstra.swift; sourceTree = "<group>"; };
+		B55E3B4C21A1887A004FAB61 /* Dfs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dfs.swift; sourceTree = "<group>"; };
 		B58A391921987D7E0045B9FB /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Sources/SwiftGraph/Stack.swift; sourceTree = SOURCE_ROOT; };
 		B58A391A21987D7E0045B9FB /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Queue.swift; path = Sources/SwiftGraph/Queue.swift; sourceTree = SOURCE_ROOT; };
 		B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructorsPerformanceTests.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 		7985B8FC1E5A4FB800C100E7 /* SwiftGraph */ = {
 			isa = PBXGroup;
 			children = (
+				B55E3B4E21A1887F004FAB61 /* Generated */,
 				5589B4811C0E774300D6664E /* Edges */,
 				5589B4821C0E774F00D6664E /* Graphs */,
 				B58B0D732083DEC400A0E1AB /* Operations */,
@@ -310,6 +313,15 @@
 				B54FDA702172A34D00057C51 /* ConstructorsTests.swift */,
 			);
 			path = Constructors;
+			sourceTree = "<group>";
+		};
+		B55E3B4E21A1887F004FAB61 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				B55E3B4C21A1887A004FAB61 /* Dfs.swift */,
+			);
+			name = Generated;
+			path = ../Sources/SwiftGraph/Generated;
 			sourceTree = "<group>";
 		};
 		B58B0D732083DEC400A0E1AB /* Operations */ = {
@@ -432,7 +444,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0710;
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Oak Snow Consulting";
 				TargetAttributes = {
@@ -532,6 +544,7 @@
 				7985B9261E5A503200C100E7 /* WeightedGraph.swift in Sources */,
 				B58A391B21987D7E0045B9FB /* Stack.swift in Sources */,
 				7985B9221E5A503200C100E7 /* UnweightedEdge.swift in Sources */,
+				B55E3B4D21A1887A004FAB61 /* Dfs.swift in Sources */,
 				7985B9281E5A503200C100E7 /* GraphTraverser.swift in Sources */,
 				7985B9211E5A503200C100E7 /* Edge.swift in Sources */,
 				7985B9271E5A503200C100E7 /* SwiftPriorityQueue.swift in Sources */,

@@ -1,0 +1,14 @@
+struct {{ algorithm.name }}<G: Graph> {
+    typealias V = G.V
+    typealias E = G.E
+
+    public init(on graph: G) {
+        self.graph = graph
+    }
+
+    public let graph: G
+
+    {% for specialization in algorithm.specializations %}
+        {{ specialization.rendered }}
+    {% endfor %}
+}
