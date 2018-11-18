@@ -167,7 +167,7 @@ public struct BFSVisitOrder<G: Graph>: GraphTraverser {
 public extension Graph {
 
     public func bfs(fromIndex: Int, goalTest: (Int) -> Bool) -> [E] {
-        return BFS(on: self).from(index: fromIndex, goalTest: goalTest)
+        return Bfs(on: self).from(index: fromIndex, goalTest: goalTest)
     }
 
     public func bfs(from: V, goalTest: (V) -> Bool) -> [E] {

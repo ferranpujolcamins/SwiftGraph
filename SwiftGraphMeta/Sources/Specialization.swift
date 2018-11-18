@@ -8,18 +8,50 @@
 import Stencil
 import PathKit
 
+extension Specialization {
+    enum Reducer {
+        case prunning((String) -> String)
+        case nonPrunning((String) -> String)
+
+        var closure: (String) -> String {
+            switch self {
+            case .prunning(let closure):
+                return closure
+            case .nonPrunning(let closure):
+                return closure
+            }
+        }
+    }
+}
+
 struct Specialization {
     let signature: String
+    let setup: String
+    let reducer: Reducer
     let goalTest: (String) -> String
+    let retrn: String
 }
 
 struct SpecializationWithContext {
-    let specialization: Specialization
+    let signature: String
+    let setup: String
+    let prunningReducer: Bool
+    let goalTest: (String) -> String
+    let retrn: String
 
     var context: Context
 
     init(specialization: Specialization, context: Context) {
-        self.specialization = specialization
+        self.signature = specialization.signature
+        self.setup = specialization.setup
+        if case .prunning = specialization.reducer {
+            self.prunningReducer = true
+        } else {
+            self.prunningReducer = false
+        }
+        self.goalTest = specialization.goalTest
+        self.retrn = specialization.retrn
+
         self.context = context
         let ext = Extension()
         ext.registerFilter("GOAL_TEST", filter: { (anyValue) -> Any? in
@@ -28,6 +60,14 @@ struct SpecializationWithContext {
             }
 
             return specialization.goalTest(value)
+        })
+
+        ext.registerFilter("REDUCER", filter: { (anyValue) -> Any? in
+            guard let value = anyValue as? String else {
+                return anyValue
+            }
+
+            return specialization.reducer.closure(value)
         })
 
         self.context.push(ext)
@@ -39,7 +79,7 @@ struct SpecializationWithContext {
 
     func asDict() -> [String: Any] {
         return [
-            "specialization" : specialization
+            "specialization" : self
         ]
     }
 }

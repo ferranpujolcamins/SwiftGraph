@@ -177,7 +177,7 @@ public struct DFSVisitOrder<G: Graph>: GraphTraverser {
 public extension Graph {
 
     public func dfs(fromIndex: Int, goalTest: (Int) -> Bool) -> [E] {
-        return DFS(on: self).from(index: fromIndex, goalTest: goalTest)
+        return Dfs(on: self).from(index: fromIndex, goalTest: goalTest)
     }
 
     public func dfs(from: V, goalTest: (V) -> Bool) -> [E] {

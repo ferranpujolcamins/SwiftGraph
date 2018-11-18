@@ -15,17 +15,33 @@ let bfs = Algorithm(
     specializations: [
         Specialization(
             signature: "from(_ initalVertexIndex: Int, goalTest: (Int) -> Bool, reducer: G.Reducer) -> Int?",
+            setup: "",
+            reducer: .prunning({
+                return "reducer(\($0))"
+            }),
             goalTest: {
                 return """
                 if goalTest(\($0)) {
                     return \($0)
                 }
                 """
-            }
+            },
+            retrn: "return nil"
         ),
         Specialization(
-            signature: "from(_ initalVertexIndex: Int, reducer: G.Reducer) -> Int?",
-            goalTest: { _ in "" }
+            signature: "from(index initalVertexIndex: Int, goalTest: (Int) -> Bool) -> [E]",
+            setup: "var pathDict:[Int: E] = [:]",
+            reducer: .nonPrunning({ _ in "pathDict[edge.v] = edge" }),
+            goalTest: {
+                return """
+                if goalTest(\($0)) {
+                return pathDictToPath(from: initalVertexIndex, to: \($0), pathDict: pathDict) as! [E]
+                }
+                """
+            },
+            retrn: """
+                    return []
+                   """
         )
     ]
 )

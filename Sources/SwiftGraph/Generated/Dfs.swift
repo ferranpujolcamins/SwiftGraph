@@ -34,9 +34,11 @@ struct Dfs<G: Graph> {
             visited[v] = true
 
             let shouldVisitNeighbours = reducer(edge)
+
             if goalTest(v) {
                 return v
             }
+
             if shouldVisitNeighbours {
                 let neighbours = graph.edgesForIndex(v)
                 for e in neighbours {
@@ -46,10 +48,15 @@ struct Dfs<G: Graph> {
                 }
             }
         }
-        return nil // no route found
+        return nil
     }
 
-    func from(_ initalVertexIndex: Int, reducer: G.Reducer) -> Int? {
+    func from(index initalVertexIndex: Int, goalTest: (Int) -> Bool) -> [E] {
+        var pathDict: [Int: E] = [:]
+        if goalTest(initalVertexIndex) {
+            return pathDictToPath(from: initalVertexIndex, to: initalVertexIndex, pathDict: pathDict) as! [E]
+        }
+
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
         let container = Stack<E>()
 
@@ -70,17 +77,19 @@ struct Dfs<G: Graph> {
             }
             visited[v] = true
 
-            let shouldVisitNeighbours = reducer(edge)
+            pathDict[edge.v] = edge
 
-            if shouldVisitNeighbours {
-                let neighbours = graph.edgesForIndex(v)
-                for e in neighbours {
-                    if !visited[e.v] {
-                        container.push(e)
-                    }
+            if goalTest(v) {
+                return pathDictToPath(from: initalVertexIndex, to: v, pathDict: pathDict) as! [E]
+            }
+
+            let neighbours = graph.edgesForIndex(v)
+            for e in neighbours {
+                if !visited[e.v] {
+                    container.push(e)
                 }
             }
         }
-        return nil // no route found
+        return []
     }
 }
