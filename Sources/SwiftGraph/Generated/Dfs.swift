@@ -8,7 +8,6 @@ struct Dfs<G: Graph> {
 
     public let graph: G
 
-    
     func from(_ initalVertexIndex: Int, goalTest: (Int) -> Bool, reducer: G.Reducer) -> Int? {
         if goalTest(initalVertexIndex) {
             return initalVertexIndex
@@ -48,11 +47,7 @@ struct Dfs<G: Graph> {
         return nil // no route found
     }
 
-
-    
     func from(_ initalVertexIndex: Int, reducer: G.Reducer) -> Int? {
-        
-
         var visited: [Bool] = [Bool](repeating: false, count: graph.vertexCount)
         let container = Stack<E>()
 
@@ -71,7 +66,7 @@ struct Dfs<G: Graph> {
                 continue
             }
             let shouldVisitNeighbours = reducer(edge)
-            
+
             if shouldVisitNeighbours {
                 visited[v] = true
                 let neighbours = graph.edgesForIndex(v)
@@ -84,7 +79,4 @@ struct Dfs<G: Graph> {
         }
         return nil // no route found
     }
-
-
-    
 }

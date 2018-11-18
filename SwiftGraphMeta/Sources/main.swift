@@ -16,6 +16,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 import Foundation
+import SwiftFormat
 
 guard CommandLine.arguments.count >= 2 else {
     print("Missing templates path argument")
@@ -36,7 +37,7 @@ let templatesPath = CommandLine.arguments[1]
 let outPath = CommandLine.arguments[2]
 
 func write(_ file: GeneratedFile) {
-    guard let outputData = file.content.data(using: String.Encoding.utf8) else {
+    guard let outputData = formatSource(file.content).data(using: String.Encoding.utf8) else {
         print("Unable to encode content to UTF8")
         exit(5)
     }
@@ -62,6 +63,14 @@ func write(_ file: GeneratedFile) {
     file.write(outputData)
 
     print("File written: \(filePath)")
+}
+
+func formatSource(_ source: String) -> String {
+    let tokens = tokenize(source)
+    let rules = FormatRules.all
+    let formatOptions = FormatOptions.default
+    let newTokens = try! applyRules(rules, to: tokens, with: formatOptions)
+    return sourceCode(for: newTokens)
 }
 
 struct GeneratedFile {
