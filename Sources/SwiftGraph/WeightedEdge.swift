@@ -29,6 +29,10 @@ public struct WeightedEdge<W: Equatable>: Edge, CustomStringConvertible, Equatab
         self.weight = weight
     }
 
+    public func reversed() -> WeightedEdge<W> {
+        return WeightedEdge(u: v, v: u, weight: weight)
+    }
+
     //Implement Printable protocol
     public var description: String {
         return "\(u) \(weight)> \(v)"
