@@ -24,7 +24,7 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
     public init() {
     }
     
-    public init(vertices: [V]) {
+    required public init(vertices: [V]) {
         for vertex in vertices {
             _ = self.addVertex(vertex)
         }
@@ -130,7 +130,7 @@ public final class CodableWeightedGraph<V: Codable & Equatable, W: Comparable & 
         super.init()
     }
     
-    override public init(vertices: [V]) {
+    required public init(vertices: [V]) {
         super.init(vertices: vertices)
     }
 

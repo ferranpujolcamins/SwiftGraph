@@ -24,11 +24,14 @@ open class UnweightedGraph<V: Equatable>: Graph {
     public init() {
     }
     
-    public init(vertices: [V]) {
+    required public init(vertices: [V]) {
         for vertex in vertices {
             _ = self.addVertex(vertex)
         }
     }
+}
+
+extension Graph where E == UnweightedEdge {
 
     /// Initialize an UnweightedGraph consisting of path.
     ///
@@ -43,7 +46,7 @@ open class UnweightedGraph<V: Equatable>: Graph {
     ///   - directed: If false, undirected edges are created.
     ///               If true, edges are directed from vertex i to vertex i+1 in path.
     ///               Default is false.
-    public convenience init(withPath path: [V], directed: Bool = false) {
+    public init(withPath path: [V], directed: Bool = false) {
         self.init(vertices: path)
 
         guard path.count >= 2 else {
@@ -71,7 +74,7 @@ open class UnweightedGraph<V: Equatable>: Graph {
     ///   - directed: If false, undirected edges are created.
     ///               If true, edges are directed from vertex i to vertex i+1 in cycle.
     ///               Default is false.
-    public convenience init(withCycle cycle: [V], directed: Bool = false) {
+    public init(withCycle cycle: [V], directed: Bool = false) {
         self.init(withPath: cycle, directed: directed)
         if cycle.count > 0 {
             self.addEdge(fromIndex: cycle.count-1, toIndex: 0, directed: directed)
@@ -84,7 +87,7 @@ open class UnweightedGraph<V: Equatable>: Graph {
     /// - parameter to: The ending vertex's index.
     /// - parameter directed: Is the edge directed? (default `false`)
     public func addEdge(fromIndex: Int, toIndex: Int, directed: Bool = false) {
-        addEdge(UnweightedEdge(u: fromIndex, v: toIndex), directed: directed)
+        self.addEdge(UnweightedEdge(u: fromIndex, v: toIndex), directed: directed)
     }
     
     /// This is a convenience method that adds an unweighted, undirected edge between the first occurence of two vertices. It takes O(n) time.
@@ -132,7 +135,7 @@ public final class CodableUnweightedGraph<V: Codable & Equatable> : UnweightedGr
         super.init()
     }
     
-    override public init(vertices: [V]) {
+    required public init(vertices: [V]) {
         super.init(vertices: vertices)
     }
 

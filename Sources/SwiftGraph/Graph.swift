@@ -24,6 +24,9 @@ public protocol Graph: class, CustomStringConvertible, Collection {
     associatedtype E: Edge & Equatable
     var vertices: [V] { get set }
     var edges: [[E]] { get set }
+
+    init(vertices: [V])
+    func addEdge(_ e: E, directed: Bool)
 }
 
 extension Graph {

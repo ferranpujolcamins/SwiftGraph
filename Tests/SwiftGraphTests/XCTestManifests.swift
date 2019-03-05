@@ -69,6 +69,8 @@ extension SwiftGraphSearchTests {
         ("testDFSWithCycle", testDFSWithCycle),
         ("testFindAllBfs", testFindAllBfs),
         ("testFindAllDfs", testFindAllDfs),
+        ("testTraverseBfsOnCycle", testTraverseBfsOnCycle),
+        ("testTraverseDfsOnCycle", testTraverseDfsOnCycle),
     ]
 }
 
@@ -118,7 +120,10 @@ extension UniqueElementsGraphHashableTests {
         ("testUniqueDirectedEdges", testUniqueDirectedEdges),
         ("testUniqueDirectedLoop", testUniqueDirectedLoop),
         ("testUniqueDirectedLoop2", testUniqueDirectedLoop2),
-        ("testUniqueEdgesCombined", testUniqueEdgesCombined),
+        ("testUniqueEdgesCombined1", testUniqueEdgesCombined1),
+        ("testUniqueEdgesCombined2", testUniqueEdgesCombined2),
+        ("testUniqueEdgesCombined3", testUniqueEdgesCombined3),
+        ("testUniqueEdgesCombined4", testUniqueEdgesCombined4),
         ("testUniqueUndirectedEdges", testUniqueUndirectedEdges),
         ("testUniqueUndirectedEdges2", testUniqueUndirectedEdges2),
         ("testUniqueUndirectedLoop", testUniqueUndirectedLoop),
@@ -161,6 +166,12 @@ extension UnweightedGraphTests {
     ]
 }
 
+extension WeightedGraphTests {
+    static let __allTests = [
+        ("testWeights", testWeights),
+    ]
+}
+
 #if !os(macOS)
 public func __allTests() -> [XCTestCaseEntry] {
     return [
@@ -178,6 +189,7 @@ public func __allTests() -> [XCTestCaseEntry] {
         testCase(UniqueElementsGraphInitTests.__allTests),
         testCase(UniqueElementsGraphTests.__allTests),
         testCase(UnweightedGraphTests.__allTests),
+        testCase(WeightedGraphTests.__allTests),
     ]
 }
 #endif
