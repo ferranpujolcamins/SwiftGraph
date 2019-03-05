@@ -44,12 +44,21 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
         return vertices.count - 1
     }
 
-    /// Only allow the edge to be added once
+    /// Add an edge to the graph. Only allow the edge to be added once
     ///
     /// - parameter e: The edge to add.
-    public func addEdge(_ e: UnweightedEdge) {
-        if !edgeExists(from: e.u, to: e.v) {
+    /// - parameter directed: If false, undirected edges are created.
+    ///                       If true, a reversed edge is also created.
+    ///                       Default is false.
+    public func addEdge(_ e: E, directed: Bool = false) {
+        if !edgeExists(e) {
             edges[e.u].append(e)
+        }
+        if !directed {
+            let reversedEdge = e.reversed()
+            if !edgeExists(reversedEdge) {
+                edges[e.v].append(reversedEdge)
+            }
         }
     }
     
@@ -59,12 +68,7 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
     /// - parameter to: The ending vertex's index.
     /// - parameter directed: Is the edge directed? (default `false`)
     public func addEdge(fromIndex u: Int, toIndex v: Int, directed: Bool = false) {
-        if !edgeExists(from: u, to: v) {
-            addEdge(UnweightedEdge(u: u, v: v))
-            if !directed && !edgeExists(from: v, to: u) {
-                addEdge(UnweightedEdge(u: v, v: u))
-            }
-        }
+        addEdge(UnweightedEdge(u: u, v: v), directed: directed)
     }
     
     /// Only allow the edge to be added once
@@ -76,6 +80,29 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
         if let u = indexOfVertex(from), let v = indexOfVertex(to) {
             addEdge(fromIndex: u, toIndex: v, directed: directed)
         }
+    }
+
+    /// Is there an edge from one vertex to another?
+    ///
+    /// - parameter from: The index of the starting edge.
+    /// - parameter to: The index of the ending edge.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: Int, to: Int) -> Bool {
+        return edgeExists(E(u: from, v: to))
+    }
+
+    /// Is there an edge from one vertex to another? Note this will look at the first occurence of each vertex. Also returns false if either of the supplied vertices cannot be found in the graph.
+    ///
+    /// - parameter from: The first vertex.
+    /// - parameter to: The second vertex.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: V, to: V) -> Bool {
+        if let u = indexOfVertex(from) {
+            if let v = indexOfVertex(to) {
+                return edgeExists(from: u, to: v)
+            }
+        }
+        return false
     }
 }
 

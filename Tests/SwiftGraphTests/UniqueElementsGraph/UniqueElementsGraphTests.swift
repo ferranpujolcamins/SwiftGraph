@@ -115,10 +115,37 @@ class UniqueElementsGraphHashableTests: XCTestCase {
         XCTAssertEqual(g.edgeCount, 2, "Expected one edges")
     }
     
-    func testUniqueEdgesCombined() {
+    func testUniqueEdgesCombined1() {
+        let g = UniqueElementsGraph<EquatableString>(vertices:["Atlanta", "Chicago"])
+        g.addEdge(from: "Atlanta", to: "Chicago", directed: true)
+        g.addEdge(from: "Atlanta", to: "Chicago", directed: false)
+        XCTAssertTrue(g.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Atlanta to Chicago")
+        XCTAssertTrue(g.edgeExists(from: "Chicago", to: "Atlanta"), "Expected an edge from Chicago to Atlanta")
+        XCTAssertEqual(g.edgeCount, 2, "Expected two edges")
+    }
+
+    func testUniqueEdgesCombined2() {
+        let g = UniqueElementsGraph<EquatableString>(vertices:["Atlanta", "Chicago"])
+        g.addEdge(from: "Atlanta", to: "Chicago", directed: true)
+        g.addEdge(from: "Chicago", to: "Atlanta", directed: false)
+        XCTAssertTrue(g.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Atlanta to Chicago")
+        XCTAssertTrue(g.edgeExists(from: "Chicago", to: "Atlanta"), "Expected an edge from Chicago to Atlanta")
+        XCTAssertEqual(g.edgeCount, 2, "Expected two edges")
+    }
+
+    func testUniqueEdgesCombined3() {
         let g = UniqueElementsGraph<EquatableString>(vertices:["Atlanta", "Chicago"])
         g.addEdge(from: "Atlanta", to: "Chicago", directed: false)
         g.addEdge(from: "Atlanta", to: "Chicago", directed: true)
+        XCTAssertTrue(g.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Atlanta to Chicago")
+        XCTAssertTrue(g.edgeExists(from: "Chicago", to: "Atlanta"), "Expected an edge from Chicago to Atlanta")
+        XCTAssertEqual(g.edgeCount, 2, "Expected two edges")
+    }
+
+    func testUniqueEdgesCombined4() {
+        let g = UniqueElementsGraph<EquatableString>(vertices:["Atlanta", "Chicago"])
+        g.addEdge(from: "Atlanta", to: "Chicago", directed: false)
+        g.addEdge(from: "Chicago", to: "Atlanta", directed: true)
         XCTAssertTrue(g.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Atlanta to Chicago")
         XCTAssertTrue(g.edgeExists(from: "Chicago", to: "Atlanta"), "Expected an edge from Chicago to Atlanta")
         XCTAssertEqual(g.edgeCount, 2, "Expected two edges")

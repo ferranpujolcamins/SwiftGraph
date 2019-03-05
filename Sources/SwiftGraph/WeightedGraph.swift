@@ -64,6 +64,29 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
         }
     }
 
+    /// Is there an edge from one vertex to another?
+    ///
+    /// - parameter from: The index of the starting edge.
+    /// - parameter to: The index of the ending edge.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: Int, to: Int, withWeight weight: W) -> Bool {
+        return edgeExists(WeightedEdge(u: from, v: to, weight: weight))
+    }
+
+    /// Is there an edge from one vertex to another? Note this will look at the first occurence of each vertex. Also returns false if either of the supplied vertices cannot be found in the graph.
+    ///
+    /// - parameter from: The first vertex.
+    /// - parameter to: The second vertex.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: V, to: V, withWeight weight: W) -> Bool {
+        if let u = indexOfVertex(from) {
+            if let v = indexOfVertex(to) {
+                return edgeExists(from: u, to: v, withWeight: weight)
+            }
+        }
+        return false
+    }
+
     /// Returns all the weights associated to the edges between two vertex indices.
     ///
     /// - Parameters:

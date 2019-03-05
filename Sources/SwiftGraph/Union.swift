@@ -43,7 +43,7 @@ public extension UniqueElementsGraph {
         // When vertices are removed from Graph, edges might mutate,
         // so we need to add new copies of them for the result graph.
         for edge in firstGraph.edges.joined() {
-            addEdge(edge)
+            addEdge(edge, directed: true)
         }
 
         for g in others {

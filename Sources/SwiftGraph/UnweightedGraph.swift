@@ -97,6 +97,29 @@ open class UnweightedGraph<V: Equatable>: Graph {
             addEdge(UnweightedEdge(u: u, v: v), directed: directed)
         }
     }
+
+    /// Is there an edge from one vertex to another?
+    ///
+    /// - parameter from: The index of the starting edge.
+    /// - parameter to: The index of the ending edge.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: Int, to: Int) -> Bool {
+        return edgeExists(E(u: from, v: to))
+    }
+
+    /// Is there an edge from one vertex to another? Note this will look at the first occurence of each vertex. Also returns false if either of the supplied vertices cannot be found in the graph.
+    ///
+    /// - parameter from: The first vertex.
+    /// - parameter to: The second vertex.
+    /// - returns: A Bool that is true if such an edge exists, and false otherwise.
+    public func edgeExists(from: V, to: V) -> Bool {
+        if let u = indexOfVertex(from) {
+            if let v = indexOfVertex(to) {
+                return edgeExists(from: u, to: v)
+            }
+        }
+        return false
+    }
 }
 
 public final class CodableUnweightedGraph<V: Codable & Equatable> : UnweightedGraph<V>, Codable {
