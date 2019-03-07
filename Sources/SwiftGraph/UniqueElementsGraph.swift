@@ -16,10 +16,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+public typealias UnweightedUniqueElementsGraph<V: Equatable> = UniqueElementsGraph<V, UnweightedEdge>
+
 /// A subclass of UnweightedGraph that ensures there are no pairs of equal vertices and no repeated edges.
-open class UniqueElementsGraph<V: Equatable>: Graph {
+open class UniqueElementsGraph<V: Equatable, E: Edge&Equatable>: Graph {
     public var vertices: [V] = [V]()
-    public var edges: [[UnweightedEdge]] = [[UnweightedEdge]]() //adjacency lists
+    public var edges: [[E]] = [[E]]() //adjacency lists
 
     public init() {
     }
@@ -50,7 +52,7 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
     /// - parameter directed: If false, undirected edges are created.
     ///                       If true, a reversed edge is also created.
     ///                       Default is false.
-    public func addEdge(_ e: UnweightedEdge, directed: Bool = false) {
+    public func addEdge(_ e: E, directed: Bool = false) {
         if !self.edgeExists(e) {
             edges[e.u].append(e)
         }
@@ -61,26 +63,15 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
             }
         }
     }
+}
 
-//    /// Only allow the edge to be added once
-//    ///
-//    /// - parameter from: The starting vertex's index.
-//    /// - parameter to: The ending vertex's index.
-//    /// - parameter directed: Is the edge directed? (default `false`)
-//    public func addEdge(fromIndex u: Int, toIndex v: Int, directed: Bool = false) {
-//        addEdge(UnweightedEdge(u: u, v: v), directed: directed)
-//    }
-//    
-//    /// Only allow the edge to be added once
-//    ///
-//    /// - parameter from: The starting vertex.
-//    /// - parameter to: The ending vertex.
-//    /// - parameter directed: Is the edge directed? (default `false`)
-//    public func addEdge(from: V, to: V, directed: Bool = false) {
-//        if let u = indexOfVertex(from), let v = indexOfVertex(to) {
-//            addEdge(fromIndex: u, toIndex: v, directed: directed)
-//        }
-//    }
+extension UniqueElementsGraph where E == UnweightedEdge {
+
+    private func addEdgesForPath(withIndices indices: [Int], directed: Bool) {
+        for i in 0..<indices.count - 1 {
+            addEdge(fromIndex: indices[i], toIndex: indices[i+1], directed: directed)
+        }
+    }
 
     /// Is there an edge from one vertex to another?
     ///
@@ -104,13 +95,24 @@ open class UniqueElementsGraph<V: Equatable>: Graph {
         }
         return false
     }
-}
 
-extension UniqueElementsGraph {
+    /// Only allow the edge to be added once
+    ///
+    /// - parameter from: The starting vertex's index.
+    /// - parameter to: The ending vertex's index.
+    /// - parameter directed: Is the edge directed? (default `false`)
+    public func addEdge(fromIndex u: Int, toIndex v: Int, directed: Bool = false) {
+        addEdge(UnweightedEdge(u: u, v: v), directed: directed)
+    }
 
-    private func addEdgesForPath(withIndices indices: [Int], directed: Bool) {
-        for i in 0..<indices.count - 1 {
-            addEdge(fromIndex: indices[i], toIndex: indices[i+1], directed: directed)
+    /// Only allow the edge to be added once
+    ///
+    /// - parameter from: The starting vertex.
+    /// - parameter to: The ending vertex.
+    /// - parameter directed: Is the edge directed? (default `false`)
+    public func addEdge(from: V, to: V, directed: Bool = false) {
+        if let u = indexOfVertex(from), let v = indexOfVertex(to) {
+            addEdge(fromIndex: u, toIndex: v, directed: directed)
         }
     }
 
@@ -127,16 +129,16 @@ extension UniqueElementsGraph {
     ///   - directed: If false, undirected edges are created.
     ///               If true, edges are directed from vertex i to vertex i+1 in path.
     ///               Default is false.
-//    public convenience init(withPath path: [V], directed: Bool = false) {
-//        self.init(vertices: path)
-//
-//        guard path.count >= 2 else {
-//            return
-//        }
-//
-//        let indices = path.map({ indexOfVertex($0)! })
-//        addEdgesForPath(withIndices: indices, directed: directed)
-//    }
+    public convenience init(withPath path: [V], directed: Bool = false) {
+        self.init(vertices: path)
+
+        guard path.count >= 2 else {
+            return
+        }
+
+        let indices = path.map({ indexOfVertex($0)! })
+        addEdgesForPath(withIndices: indices, directed: directed)
+    }
 
     /// Initialize an UniqueElementsGraph consisting of cycle.
     ///
@@ -154,25 +156,25 @@ extension UniqueElementsGraph {
     ///   - directed: If false, undirected edges are created.
     ///               If true, edges are directed from vertex i to vertex i+1 in cycle.
     ///               Default is false.
-//    public convenience init(withCycle cycle: [V], directed: Bool = false) {
-//        self.init(vertices: cycle)
-//
-//        guard cycle.count >= 2 else {
-//            if let v = cycle.first {
-//                let index = addVertex(v)
-//                addEdge(fromIndex: index, toIndex: index)
-//            }
-//            return
-//        }
-//
-//        let indices = cycle.map({ indexOfVertex($0)! })
-//        addEdgesForPath(withIndices: indices, directed: directed)
-//        addEdge(fromIndex: indices.last!, toIndex: indices.first!, directed: directed)
-//    }
+    public convenience init(withCycle cycle: [V], directed: Bool = false) {
+        self.init(vertices: cycle)
+
+        guard cycle.count >= 2 else {
+            if let v = cycle.first {
+                let index = addVertex(v)
+                addEdge(fromIndex: index, toIndex: index)
+            }
+            return
+        }
+
+        let indices = cycle.map({ indexOfVertex($0)! })
+        addEdgesForPath(withIndices: indices, directed: directed)
+        addEdge(fromIndex: indices.last!, toIndex: indices.first!, directed: directed)
+    }
 
 }
 
-extension UniqueElementsGraph where V: Hashable {
+extension UniqueElementsGraph where V: Hashable, E == UnweightedEdge {
     public convenience init(withPath path: [V], directed: Bool = false) {
         self.init()
 
