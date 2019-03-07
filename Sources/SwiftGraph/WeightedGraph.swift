@@ -29,7 +29,11 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
             _ = self.addVertex(vertex)
         }
     }
-    
+}
+
+extension Graph where E: WeightedEdgeProtocol {
+    public typealias W = E.Weight
+
     /// Find all of the neighbors of a vertex at a given index.
     ///
     /// - parameter index: The index for the vertex to find the neighbors of.
@@ -41,7 +45,7 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
         }
         return distanceTuples;
     }
-    
+
     /// This is a convenience method that adds a weighted edge.
     ///
     /// - parameter from: The starting vertex's index.
@@ -49,9 +53,9 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
     /// - parameter directed: Is the edge directed? (default false)
     /// - parameter weight: the Weight of the edge to add.
     public func addEdge(fromIndex: Int, toIndex: Int, weight:W, directed: Bool = false) {
-        addEdge(WeightedEdge<W>(u: fromIndex, v: toIndex, weight: weight), directed: directed)
+        addEdge(E(u: fromIndex, v: toIndex, weight: weight), directed: directed)
     }
-    
+
     /// This is a convenience method that adds a weighted edge between the first occurence of two vertices. It takes O(n) time.
     ///
     /// - parameter from: The starting vertex.
@@ -70,7 +74,7 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
     /// - parameter to: The index of the ending edge.
     /// - returns: A Bool that is true if such an edge exists, and false otherwise.
     public func edgeExists(from: Int, to: Int, withWeight weight: W) -> Bool {
-        return edgeExists(WeightedEdge(u: from, v: to, weight: weight))
+        return edgeExists(E(u: from, v: to, weight: weight))
     }
 
     /// Is there an edge from one vertex to another? Note this will look at the first occurence of each vertex. Also returns false if either of the supplied vertices cannot be found in the graph.
@@ -109,8 +113,9 @@ open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
         }
         return []
     }
+
+    // Implement Printable protocol
     
-    //Implement Printable protocol
     public var description: String {
         var d: String = ""
         for i in 0..<vertices.count {

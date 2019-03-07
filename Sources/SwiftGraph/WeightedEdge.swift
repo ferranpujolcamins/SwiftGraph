@@ -17,6 +17,17 @@
 //  limitations under the License.
 
 
+public protocol WeightedEdgeProtocol {
+    associatedtype Weight: Equatable
+
+    init(u: Int, v: Int, weight: Weight)
+    var weight: Weight { get }
+}
+
+extension WeightedEdge: WeightedEdgeProtocol {
+    public typealias Weight = W
+}
+
 /// A weighted edge, who's weight subscribes to Comparable.
 public struct WeightedEdge<W: Equatable>: Edge, CustomStringConvertible, Equatable {
     public var u: Int
