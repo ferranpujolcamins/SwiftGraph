@@ -8,11 +8,17 @@ let package = Package(
         .library(
             name: "SwiftGraph",
             targets: ["SwiftGraph"]),
+        .library(
+            name: "GraphVizCoder",
+            targets: ["GraphVizCoder"]),
         ],
     dependencies: [],
     targets: [
         .target(
             name: "SwiftGraph",
+            dependencies: []),
+        .target(
+            name: "GraphVizCoder",
             dependencies: []),
         .testTarget(
             name: "SwiftGraphTests",
@@ -20,5 +26,8 @@ let package = Package(
         .testTarget(
             name: "SwiftGraphPerformanceTests",
             dependencies: ["SwiftGraph"]),
+        .testTarget(
+            name: "GraphVizCoderTests",
+            dependencies: ["GraphVizCoder"]),
         ]
 )
