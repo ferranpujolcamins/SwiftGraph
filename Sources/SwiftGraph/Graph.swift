@@ -32,8 +32,6 @@
 /// This list holds the indices of the following edges:
 /// - Directed edges that start at the ith vertex.
 /// - Undirected edges that are incident to the ith vertex.
-/// The ith vertex of the graph (the vertex with index `i`), The ith element of `incidenceLists` is an array containing the
-/// indices of the edges that originate at the vertex with index `i`.
 public protocol Graph: class, CustomStringConvertible, Collection {
     associatedtype V: Equatable
     associatedtype E: Edge & Equatable
@@ -69,7 +67,6 @@ extension Graph {
     ///
     /// - parameter vertex: The vertex you are looking for.
     /// - returns: The index of the vertex. Return nil if it can't find it.
-    
     public func indexOfVertex(_ vertex: V) -> Int? {
         if let i = vertices.index(of: vertex) {
             return i

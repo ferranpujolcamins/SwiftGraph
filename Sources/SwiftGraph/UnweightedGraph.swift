@@ -102,32 +102,32 @@ extension Graph where E == UnweightedEdge {
         }
     }
 
-    /// Check whether there is an edge from one vertex to another vertex.
-    ///
-    /// - parameter from: The index of the starting vertex of the edge.
-    /// - parameter to: The index of the ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(fromIndex: Int, toIndex: Int, directed: Bool) -> Bool {
-        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed))
-    }
-    // TODO: add is directly reachable method or something like this
-
-    /// Check whether there is an edge from one vertex to another vertex.
-    ///
-    /// Note this will look at the first occurence of each vertex.
-    /// Also returns false if either of the supplied vertices cannot be found in the graph.
-    ///
-    /// - parameter from: The starting vertex of the edge.
-    /// - parameter to: The ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(from: V, to: V, directed: Bool) -> Bool {
-        if let u = indexOfVertex(from) {
-            if let v = indexOfVertex(to) {
-                return edgeExists(fromIndex: u, toIndex: v, directed: directed)
-            }
-        }
-        return false
-    }
+//    /// Check whether there is an edge from one vertex to another vertex.
+//    ///
+//    /// - parameter from: The index of the starting vertex of the edge.
+//    /// - parameter to: The index of the ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(fromIndex: Int, toIndex: Int, directed: Bool) -> Bool {
+//        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed))
+//    }
+//    // TODO: add is directly reachable method or something like this
+//
+//    /// Check whether there is an edge from one vertex to another vertex.
+//    ///
+//    /// Note this will look at the first occurence of each vertex.
+//    /// Also returns false if either of the supplied vertices cannot be found in the graph.
+//    ///
+//    /// - parameter from: The starting vertex of the edge.
+//    /// - parameter to: The ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(from: V, to: V, directed: Bool) -> Bool {
+//        if let u = indexOfVertex(from) {
+//            if let v = indexOfVertex(to) {
+//                return edgeExists(fromIndex: u, toIndex: v, directed: directed)
+//            }
+//        }
+//        return false
+//    }
 }
 
 public final class CodableUnweightedGraph<V: Codable & Equatable> : UnweightedGraph<V>, Codable {

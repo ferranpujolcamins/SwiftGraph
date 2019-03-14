@@ -28,6 +28,9 @@
 		7985B92A1E5A503200C100E7 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5589B4771C0E759800D6664E /* Stack.swift */; };
 		7985B92B1E5A503200C100E7 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5589B47A1C0E75A700D6664E /* Queue.swift */; };
 		B51B460B2083E14200CD0463 /* Union.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51B460A2083E14200CD0463 /* Union.swift */; };
+		B5437D55223B129800A7F1B6 /* WeightedGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F07B6C222EB4BD00824F08 /* WeightedGraphTests.swift */; };
+		B5437D56223B180F00A7F1B6 /* EquatableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EF1436217913F1008FCC5C /* EquatableTypes.swift */; };
+		B5437D57223B180F00A7F1B6 /* ArraysHaveSameElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F07B6A222EB43000824F08 /* ArraysHaveSameElements.swift */; };
 		B54FDA6E21729EFF00057C51 /* Constructors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54FDA6D21729EFF00057C51 /* Constructors.swift */; };
 		B5D022B1217357480079F17C /* ConstructorsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */; };
 		B5D0AC6D223AC132002E0119 /* EdgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D0AC6C223AC132002E0119 /* EdgeTests.swift */; };
@@ -532,8 +535,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5437D56223B180F00A7F1B6 /* EquatableTypes.swift in Sources */,
 				B5D0AC71223ACEE8002E0119 /* UnweightedGraphTests.swift in Sources */,
+				B5437D57223B180F00A7F1B6 /* ArraysHaveSameElements.swift in Sources */,
 				B5D0AC6D223AC132002E0119 /* EdgeTests.swift in Sources */,
+				B5437D55223B129800A7F1B6 /* WeightedGraphTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -70,54 +70,90 @@ extension Graph where E: WeightedEdgeProtocol {
         }
     }
 
-    /// Check whether there is an edge from one vertex to another vertex with a specific weight.
+//    /// Check whether there is an edge from one vertex to another vertex with a specific weight.
+//    ///
+//    /// - parameter from: The index of the starting vertex of the edge.
+//    /// - parameter to: The index of the ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(fromIndex: Int, toIndex: Int, withWeight weight: W, directed: Bool) -> Bool {
+//        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed, weight: weight))
+//    }
+//
+//    /// Check whether there is an edge from one vertex to another vertex with a specific weight.
+//    ///
+//    /// Note this will look at the first occurence of each vertex.
+//    /// Also returns false if either of the supplied vertices cannot be found in the graph.
+//    ///
+//    /// - parameter from: The starting vertex of the edge.
+//    /// - parameter to: The ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(from: V, to: V, withWeight weight: W, directed: Bool) -> Bool {
+//        if let u = indexOfVertex(from) {
+//            if let v = indexOfVertex(to) {
+//                return edgeExists(fromIndex: u, toIndex: v, withWeight: weight, directed: directed)
+//            }
+//        }
+//        return false
+//    }
+
+//    /// Check whether there is an edge from one vertex to another vertex.
+//    ///
+//    /// - parameter from: The index of the starting vertex of the edge.
+//    /// - parameter to: The index of the ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(fromIndex: Int, toIndex: Int) -> Bool {
+//        return edgesForIndex(fromIndex).map({$0.v}).contains(toIndex)
+//    }
+//
+//    /// Check whether there is an edge from one vertex to another vertex.
+//    ///
+//    /// Note this will look at the first occurence of each vertex.
+//    /// Also returns false if either of the supplied vertices cannot be found in the graph.
+//    ///
+//    /// - parameter from: The starting vertex of the edge.
+//    /// - parameter to: The ending vertex of the edge.
+//    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
+//    public func edgeExists(from: V, to: V) -> Bool {
+//        if let u = indexOfVertex(from) {
+//            if let v = indexOfVertex(to) {
+//                return edgeExists(fromIndex: u, toIndex: v)
+//            }
+//        }
+//        return false
+//    }
+
+    /// Check whether a vertex A can be reached from another vertex B through a path with only one edge having a specific weight.
     ///
-    /// - parameter from: The index of the starting vertex of the edge.
-    /// - parameter to: The index of the ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(fromIndex: Int, toIndex: Int, withWeight weight: W, directed: Bool) -> Bool {
-        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed, weight: weight))
+    /// This will happen when there is an undirected edge between A and B, or a directed edge from A to B.
+    ///
+    /// - Parameters:
+    ///   - initialIndex: The index of the initial vertex.
+    ///   - terminalIndex: The index of the terminal vertex.
+    ///   - weight: The weight of the edge we are looking for.
+    /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path having the specified weight.
+    public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int, havingWeight weight: W) -> Bool {
+        return edgesForIndex(initialIndex).contains(where: {
+            (($0.u == initialIndex && $0.v == terminalIndex) || ($0.u == terminalIndex && $0.v == initialIndex))
+                && $0.weight == weight
+        })
     }
 
-    /// Check whether there is an edge from one vertex to another vertex with a specific weight.
+    /// Check whether a vertex A can be reached from another vertex B through a path with only one edge having a specific weight.
     ///
-    /// Note this will look at the first occurence of each vertex.
-    /// Also returns false if either of the supplied vertices cannot be found in the graph.
+    /// This will happen when there is an undirected edge between A and B, or a directed edge from A to B.
+    /// If the graph has more than one vertex equal to `initialVertex` or `terminalVertex`, this method
+    /// compares the first occurence of each. If either `initialVertex` or `terminalVertex` are not found, `false` is returned.
     ///
-    /// - parameter from: The starting vertex of the edge.
-    /// - parameter to: The ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(from: V, to: V, withWeight weight: W, directed: Bool) -> Bool {
-        if let u = indexOfVertex(from) {
-            if let v = indexOfVertex(to) {
-                return edgeExists(fromIndex: u, toIndex: v, withWeight: weight, directed: directed)
-            }
-        }
-        return false
-    }
+    /// - Parameters:
+    ///   - initialIndex: The initial vertex.
+    ///   - terminalIndex: The terminal vertex.
+    ///   - weight: The weight of the edge we are looking for.
+    /// - Returns: Returns true if the `terminalVertex` can be reached from the `initialVertex` through a 1-path having the specified weight.
+    public func vertex(_ initialVertex: V, isAdjacentTo terminalVertex: V, havingWeight weight: W) -> Bool {
+        if let initialIndex = indexOfVertex(initialVertex),
+            let terminalIndex = indexOfVertex(terminalVertex) {
 
-    /// Check whether there is an edge from one vertex to another vertex.
-    ///
-    /// - parameter from: The index of the starting vertex of the edge.
-    /// - parameter to: The index of the ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(fromIndex: Int, toIndex: Int) -> Bool {
-        return edgesForIndex(fromIndex).map({$0.v}).contains(toIndex)
-    }
-
-    /// Check whether there is an edge from one vertex to another vertex.
-    ///
-    /// Note this will look at the first occurence of each vertex.
-    /// Also returns false if either of the supplied vertices cannot be found in the graph.
-    ///
-    /// - parameter from: The starting vertex of the edge.
-    /// - parameter to: The ending vertex of the edge.
-    /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(from: V, to: V) -> Bool {
-        if let u = indexOfVertex(from) {
-            if let v = indexOfVertex(to) {
-                return edgeExists(fromIndex: u, toIndex: v)
-            }
+            return vertex(withIndex: initialIndex, isAdjacentTo: terminalIndex, havingWeight: weight)
         }
         return false
     }
@@ -125,11 +161,13 @@ extension Graph where E: WeightedEdgeProtocol {
     /// Returns all the weights associated to the edges between two vertex indices.
     ///
     /// - Parameters:
-    ///   - from: The starting vertex index
-    ///   - to: The ending vertex index
+    ///   - fromIndex: The starting vertex index
+    ///   - toIndex: The ending vertex index
     /// - Returns: An array with all the weights associated to edges between the provided indexes.
-    public func weights(from: Int, to: Int) -> [W] {
-        return edgesForIndex(from).filter { $0.v == to }.map { $0.weight }
+    public func weights(fromIndex initialIndex: Int, toIndex terminalIndex: Int) -> [W] {
+        return edgesForIndex(initialIndex).filter {
+            ($0.u == initialIndex && $0.v == terminalIndex) || ($0.u == terminalIndex && $0.v == initialIndex)
+            }.map { $0.weight }
     }
 
     /// Returns all the weights associated to the edges between two vertices.
@@ -140,7 +178,7 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - Returns: An array with all the weights associated to edges between the provided vertices.
     public func weights(from: V, to: V) -> [W] {
         if let u = indexOfVertex(from), let v = indexOfVertex(to) {
-            return edgesForIndex(u).filter { $0.v == v }.map { $0.weight }
+            return weights(fromIndex: u, toIndex: v)
         }
         return []
     }
