@@ -21,15 +21,6 @@ import XCTest
 
 class UnweightedGraphTests: XCTestCase {
 
-    func testEdgeExists() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: true)
-        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
-        XCTAssertFalse(g.vertex("B", isAdjacentTo: "A"))
-        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
-        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
-    }
-
     func testPathInitializerUndirected() {
         let g0Path = UnweightedGraph<String>(withPath:[])
         XCTAssertEqual(g0Path.vertexCount, 0, "g0Path: Expected empty graph")

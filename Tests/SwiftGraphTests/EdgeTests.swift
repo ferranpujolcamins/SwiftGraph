@@ -59,7 +59,7 @@ class EdgeTests: XCTestCase {
     }
 
     // Test that we correctly store two undirected edges.
-    func testTwoUNdirectedEdgesRepresentation() {
+    func testTwoUndirectedEdgesRepresentation() {
         let g = UnweightedGraph<String>(vertices: ["A", "B"])
         g.addEdge(from: "A", to: "B", directed: false)
         g.addEdge(from: "A", to: "B", directed: false)
@@ -158,6 +158,9 @@ class EdgeTests: XCTestCase {
         XCTAssertTrue(g.vertex(withIndex: 1, isAdjacentTo: 0))
         XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
         XCTAssertTrue(g.vertex("B", isAdjacentTo: "A"))
+        // Test that we don't return false positives
+        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
+        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
     }
 
     // Test that we correctly check adjacency for a directed edge.
@@ -168,6 +171,9 @@ class EdgeTests: XCTestCase {
         XCTAssertFalse(g.vertex(withIndex: 1, isAdjacentTo: 0))
         XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
         XCTAssertFalse(g.vertex("B", isAdjacentTo: "A"))
+        // Test that we don't return false positives
+        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
+        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
     }
 
     // Test that we check adjacency for the first occurrences of repeated vertices.
