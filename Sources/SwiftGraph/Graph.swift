@@ -18,15 +18,32 @@
 
 /// The protocol for all graphs.
 /// You should generally use one of its two canonical class implementations,
-/// *UnweightedGraph* and *WeightedGraph*
+/// `UnweightedGraph` and `WeightedGraph`.
+///
+/// Vertices are stored in the `vertices` array. Each vertex can be identified by it's index in the array.
+/// Some operations change the indexes of the vertices, such as `removeVertex(_: V)`.
+///
+/// A graph can have directed edges, undirected edges or a mixture of both.
+/// For each edge in the graph we store one copy of the corresponding `Edge` object in the `allEdges` array
+/// (no matter if the edge is directed or indirected, we store only one copy of the `Edge` object).
+///
+/// `incidenceLists` is a list of lists where we keep indices of edges (the index of an edge indicates the position of the edge in the `allEdges` array).
+/// The ith list in `incidenceLists` holds the list of edges for the ith vertex of the graph (the vertex with index `i`).
+/// This list holds the indices of the following edges:
+/// - Directed edges that start at the ith vertex.
+/// - Undirected edges that are incident to the ith vertex.
+/// The ith vertex of the graph (the vertex with index `i`), The ith element of `incidenceLists` is an array containing the
+/// indices of the edges that originate at the vertex with index `i`.
 public protocol Graph: class, CustomStringConvertible, Collection {
     associatedtype V: Equatable
     associatedtype E: Edge & Equatable
+
     var vertices: [V] { get set }
-    var edges: [[E]] { get set }
+    var incidenceLists: [[Int]] { get set }
+    var allEdges: [E] { get set }
 
     init(vertices: [V])
-    func addEdge(_ e: E, directed: Bool)
+    func addEdge(_ e: E)
 }
 
 extension Graph {
@@ -37,7 +54,7 @@ extension Graph {
     
     /// How many edges are in the graph?
     public var edgeCount: Int {
-        return edges.joined().count
+        return allEdges.count
     }
     
     /// Get a vertex by its index.
@@ -65,7 +82,7 @@ extension Graph {
     /// - parameter index: The index for the vertex to find the neighbors of.
     /// - returns: An array of the neighbor vertices.
     public func neighborsForIndex(_ index: Int) -> [V] {
-        return edges[index].map({self.vertices[$0.v]})
+        return edgesForIndex(index).map { self.vertices[$0.v] }
     }
     
     /// Find all of the neighbors of a given Vertex.
@@ -83,7 +100,7 @@ extension Graph {
     ///
     /// - parameter index: The index for the vertex to find the children of.
     public func edgesForIndex(_ index: Int) -> [E] {
-        return edges[index]
+        return incidenceLists[index].map { allEdges[$0] }
     }
     
     /// Find all of the edges of a given vertex.
@@ -112,7 +129,7 @@ extension Graph {
     /// - returns: The index where the vertex was added.
     public func addVertex(_ v: V) -> Int {
         vertices.append(v)
-        edges.append([E]())
+        incidenceLists.append([Int]())
         return vertices.count - 1
     }
 
@@ -122,20 +139,24 @@ extension Graph {
     /// - parameter directed: If false, undirected edges are created.
     ///                       If true, a reversed edge is also created.
     ///                       Default is false.
-    public func addEdge(_ e: E, directed: Bool = false) {
-        edges[e.u].append(e)
-        if !directed {
-            edges[e.v].append(e.reversed())
+    public func addEdge(_ e: E) {
+        allEdges.append(e)
+        let index = allEdges.count - 1
+        incidenceLists[e.u].append(index)
+        if !e.directed && e.u != e.v {
+            incidenceLists[e.v].append(index)
         }
     }
-    
-    /// Removes all edges in both directions between vertices at indexes from & to.
+/*
+    /// Removes all directed edges from index 'from' to index 'to' and all undirected edges from index 'from' to index 'to'.
+    ///
+    /// Directed edges from index 'to' to index 'from' won't be deleted.
     ///
     /// - parameter from: The starting vertex's index.
     /// - parameter to: The ending vertex's index.
     /// - parameter bidirectional: Remove edges coming back (to -> from)
     public func removeAllEdges(from: Int, to: Int, bidirectional: Bool = true) {
-        edges[from].removeAll(where: { $0.v == to })
+        incidenceLists[from].removeAll(where: { $0.v == to })
         
         if bidirectional {
             edges[to].removeAll(where: { $0.v == from })
@@ -218,15 +239,47 @@ extension Graph {
             removeVertexAtIndex(i)
         }
     }
-
+*/
     /// Check whether an edge is in the graph or not.
     ///
     /// - parameter edge: The edge to find in the graph.
     /// - returns: True if the edge exists, and false otherwise.
     public func edgeExists(_ edge: E) -> Bool {
-        return edges[edge.u].contains(edge)
+        return allEdges.contains(edge)
     }
 
+    /// Check whether a vertex A can be reached from another vertex B through a path with only one edge.
+    ///
+    /// This will happen when there is an undirected edge between A and B, or a directed edge from A to B.
+    ///
+    /// - Parameters:
+    ///   - initialIndex: The index of the initial vertex.
+    ///   - terminalIndex: The index of the terminal vertex.
+    /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path.
+    public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int) -> Bool {
+        return edgesForIndex(initialIndex).contains(where: {
+            ($0.u == initialIndex && $0.v == terminalIndex) || ($0.u == terminalIndex && $0.v == initialIndex)
+        })
+    }
+
+    /// Check whether a vertex A can be reached from another vertex B through a path with only one edge.
+    ///
+    /// This will happen when there is an undirected edge between A and B, or a directed edge from A to B.
+    /// If the graph has more than one vertex equal to `initialVertex` or `terminalVertex`, this method
+    /// compares the first occurence of each. If either `initialVertex` or `terminalVertex` are not found, `false` is returned.
+    ///
+    /// - Parameters:
+    ///   - initialIndex: The initial vertex.
+    ///   - terminalIndex: The terminal vertex.
+    /// - Returns: Returns true if the `terminalVertex` can be reached from the `initialVertex` through a 1-path.
+    public func vertex(_ initialVertex: V, isAdjacentTo terminalVertex: V) -> Bool {
+        if let initialIndex = indexOfVertex(initialVertex),
+            let terminalIndex = indexOfVertex(terminalVertex) {
+
+            return vertex(withIndex: initialIndex, isAdjacentTo: terminalIndex)
+        }
+        return false
+    }
     
     // MARK: Implement Printable protocol
     public var description: String {

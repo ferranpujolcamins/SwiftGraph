@@ -42,8 +42,8 @@ public extension UniqueElementsGraph where E == UnweightedEdge {
 
         // When vertices are removed from Graph, edges might mutate,
         // so we need to add new copies of them for the result graph.
-        for edge in firstGraph.edges.joined() {
-            addEdge(edge, directed: true)
+        for edge in firstGraph.allEdges {
+            addEdge(edge)
         }
 
         for g in others {
@@ -53,7 +53,7 @@ public extension UniqueElementsGraph where E == UnweightedEdge {
                 _ = addVertex(vertex)
             }
 
-            for edge in g.edges.joined() {
+            for edge in g.allEdges {
                 addEdge(from: g[edge.u], to: g[edge.v], directed: true)
             }
         }

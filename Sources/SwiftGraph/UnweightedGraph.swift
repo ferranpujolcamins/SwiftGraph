@@ -18,8 +18,9 @@
 
 /// A subclass of Graph with some convenience methods for adding and removing UnweightedEdges. WeightedEdges may be added to an UnweightedGraph but their weights will be ignored.
 open class UnweightedGraph<V: Equatable>: Graph {
-    public var vertices: [V] = [V]()
-    public var edges: [[UnweightedEdge]] = [[UnweightedEdge]]() //adjacency lists
+    public var vertices = [V]()
+    public var incidenceLists = [[Int]]()
+    public var allEdges = [UnweightedEdge]()
     
     public init() {
     }
@@ -87,7 +88,7 @@ extension Graph where E == UnweightedEdge {
     /// - parameter to: The ending vertex's index.
     /// - parameter directed: Is the edge directed? (default `false`)
     public func addEdge(fromIndex: Int, toIndex: Int, directed: Bool = false) {
-        addEdge(UnweightedEdge(u: fromIndex, v: toIndex), directed: directed)
+        addEdge(UnweightedEdge(u: fromIndex, v: toIndex, directed: directed))
     }
     
     /// This is a convenience method that adds an unweighted, undirected edge between the first occurence of two vertices. It takes O(n) time.
@@ -97,7 +98,7 @@ extension Graph where E == UnweightedEdge {
     /// - parameter directed: Is the edge directed? (default `false`)
     public func addEdge(from: V, to: V, directed: Bool = false) {
         if let u = indexOfVertex(from), let v = indexOfVertex(to) {
-            addEdge(UnweightedEdge(u: u, v: v), directed: directed)
+            addEdge(UnweightedEdge(u: u, v: v, directed: directed))
         }
     }
 
@@ -106,9 +107,10 @@ extension Graph where E == UnweightedEdge {
     /// - parameter from: The index of the starting vertex of the edge.
     /// - parameter to: The index of the ending vertex of the edge.
     /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(fromIndex: Int, toIndex: Int) -> Bool {
-        return edgeExists(E(u: fromIndex, v: toIndex))
+    public func edgeExists(fromIndex: Int, toIndex: Int, directed: Bool) -> Bool {
+        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed))
     }
+    // TODO: add is directly reachable method or something like this
 
     /// Check whether there is an edge from one vertex to another vertex.
     ///
@@ -118,10 +120,10 @@ extension Graph where E == UnweightedEdge {
     /// - parameter from: The starting vertex of the edge.
     /// - parameter to: The ending vertex of the edge.
     /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(from: V, to: V) -> Bool {
+    public func edgeExists(from: V, to: V, directed: Bool) -> Bool {
         if let u = indexOfVertex(from) {
             if let v = indexOfVertex(to) {
-                return edgeExists(fromIndex: u, toIndex: v)
+                return edgeExists(fromIndex: u, toIndex: v, directed: directed)
             }
         }
         return false
@@ -131,6 +133,7 @@ extension Graph where E == UnweightedEdge {
 public final class CodableUnweightedGraph<V: Codable & Equatable> : UnweightedGraph<V>, Codable {
     enum CodingKeys: String, CodingKey {
         case vertices = "vertices"
+        case incidenceLists = "incidenceLists"
         case edges = "edges"
     }
     
@@ -145,19 +148,22 @@ public final class CodableUnweightedGraph<V: Codable & Equatable> : UnweightedGr
     public convenience init(fromGraph g: UnweightedGraph<V>) {
         self.init()
         vertices = g.vertices
-        edges = g.edges
+        incidenceLists = g.incidenceLists
+        allEdges = g.allEdges
     }
     
     public required init(from decoder: Decoder) throws  {
         super.init()
         let rootContainer = try decoder.container(keyedBy: CodingKeys.self)
         self.vertices = try rootContainer.decode([V].self, forKey: CodingKeys.vertices)
-        self.edges = try rootContainer.decode([[E]].self, forKey: CodingKeys.edges)
+        self.incidenceLists = try rootContainer.decode([[Int]].self, forKey: CodingKeys.incidenceLists)
+        self.allEdges = try rootContainer.decode([E].self, forKey: CodingKeys.edges)
     }
     
     public func encode(to encoder: Encoder) throws {
         var rootContainer = encoder.container(keyedBy: CodingKeys.self)
         try rootContainer.encode(self.vertices, forKey: CodingKeys.vertices)
-        try rootContainer.encode(self.edges, forKey: CodingKeys.edges)
+        try rootContainer.encode(self.incidenceLists, forKey: CodingKeys.incidenceLists)
+        try rootContainer.encode(self.allEdges, forKey: CodingKeys.edges)
     }
 }

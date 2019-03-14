@@ -22,7 +22,8 @@ public typealias WeightedUniqueElementsGraph<V: Equatable, W: Equatable> = Uniqu
 /// A subclass of UnweightedGraph that ensures there are no pairs of equal vertices and no repeated edges.
 open class UniqueElementsGraph<V: Equatable, E: Edge&Equatable>: Graph {
     public var vertices: [V] = [V]()
-    public var edges: [[E]] = [[E]]() //adjacency lists
+    public var incidenceLists = [[Int]]()
+    public var allEdges: [E] = [E]()
 
     public init() {
     }
@@ -43,7 +44,7 @@ open class UniqueElementsGraph<V: Equatable, E: Edge&Equatable>: Graph {
             return equalVertexIndex
         }
         vertices.append(v)
-        edges.append([E]())
+        incidenceLists.append([Int]())
         return vertices.count - 1
     }
 
@@ -53,14 +54,14 @@ open class UniqueElementsGraph<V: Equatable, E: Edge&Equatable>: Graph {
     /// - parameter directed: If false, undirected edges are created.
     ///                       If true, a reversed edge is also created.
     ///                       Default is false.
-    public func addEdge(_ e: E, directed: Bool = false) {
+    public func addEdge(_ e: E) {
         if !self.edgeExists(e) {
-            edges[e.u].append(e)
-        }
-        if !directed {
-            let reversedEdge = e.reversed()
-            if !edgeExists(reversedEdge) {
-                edges[e.v].append(reversedEdge)
+            allEdges.append(e)
+            let index = allEdges.count - 1
+            incidenceLists[e.u].append(index)
+
+            if !e.directed {
+                incidenceLists[e.v].append(index)
             }
         }
     }

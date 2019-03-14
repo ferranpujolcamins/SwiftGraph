@@ -18,8 +18,9 @@
 
 /// A subclass of Graph that has convenience methods for adding and removing WeightedEdges. All added Edges should have the same generic Comparable type W as the WeightedGraph itself.
 open class WeightedGraph<V: Equatable, W: Equatable>: Graph {
-    public var vertices: [V] = [V]()
-    public var edges: [[WeightedEdge<W>]] = [[WeightedEdge<W>]]() //adjacency lists
+    public var vertices = [V]()
+    public var incidenceLists = [[Int]]()
+    public var allEdges = [WeightedEdge<W>]()
     
     public init() {
     }
@@ -40,7 +41,8 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - returns: An array of tuples including the vertices as the first element and the weights as the second element.
     public func neighborsForIndexWithWeights(_ index: Int) -> [(V, W)] {
         var distanceTuples: [(V, W)] = [(V, W)]();
-        for edge in edges[index] {
+        for edgeIndex in incidenceLists[index] {
+            let edge = allEdges[edgeIndex]
             distanceTuples += [(vertices[edge.v], edge.weight)]
         }
         return distanceTuples;
@@ -53,7 +55,7 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - parameter directed: Is the edge directed? (default false)
     /// - parameter weight: the Weight of the edge to add.
     public func addEdge(fromIndex: Int, toIndex: Int, weight: W, directed: Bool = false) {
-        addEdge(E(u: fromIndex, v: toIndex, weight: weight), directed: directed)
+        addEdge(E(u: fromIndex, v: toIndex, directed: directed, weight: weight))
     }
     
     /// This is a convenience method that adds a weighted edge between the first occurence of two vertices. It takes O(n) time.
@@ -73,8 +75,8 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - parameter from: The index of the starting vertex of the edge.
     /// - parameter to: The index of the ending vertex of the edge.
     /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(fromIndex: Int, toIndex: Int, withWeight weight: W) -> Bool {
-        return edgeExists(E(u: fromIndex, v: toIndex, weight: weight))
+    public func edgeExists(fromIndex: Int, toIndex: Int, withWeight weight: W, directed: Bool) -> Bool {
+        return edgeExists(E(u: fromIndex, v: toIndex, directed: directed, weight: weight))
     }
 
     /// Check whether there is an edge from one vertex to another vertex with a specific weight.
@@ -85,10 +87,10 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - parameter from: The starting vertex of the edge.
     /// - parameter to: The ending vertex of the edge.
     /// - returns: True if there is an edge from the starting vertex to the ending vertex.
-    public func edgeExists(from: V, to: V, withWeight weight: W) -> Bool {
+    public func edgeExists(from: V, to: V, withWeight weight: W, directed: Bool) -> Bool {
         if let u = indexOfVertex(from) {
             if let v = indexOfVertex(to) {
-                return edgeExists(fromIndex: u, toIndex: v, withWeight: weight)
+                return edgeExists(fromIndex: u, toIndex: v, withWeight: weight, directed: directed)
             }
         }
         return false
@@ -100,7 +102,7 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - parameter to: The index of the ending vertex of the edge.
     /// - returns: True if there is an edge from the starting vertex to the ending vertex.
     public func edgeExists(fromIndex: Int, toIndex: Int) -> Bool {
-        return edges[fromIndex].map({$0.v}).contains(toIndex)
+        return edgesForIndex(fromIndex).map({$0.v}).contains(toIndex)
     }
 
     /// Check whether there is an edge from one vertex to another vertex.
@@ -127,7 +129,7 @@ extension Graph where E: WeightedEdgeProtocol {
     ///   - to: The ending vertex index
     /// - Returns: An array with all the weights associated to edges between the provided indexes.
     public func weights(from: Int, to: Int) -> [W] {
-        return edges[from].filter { $0.v == to }.map { $0.weight }
+        return edgesForIndex(from).filter { $0.v == to }.map { $0.weight }
     }
 
     /// Returns all the weights associated to the edges between two vertices.
@@ -138,7 +140,7 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - Returns: An array with all the weights associated to edges between the provided vertices.
     public func weights(from: V, to: V) -> [W] {
         if let u = indexOfVertex(from), let v = indexOfVertex(to) {
-            return edges[u].filter { $0.v == v }.map { $0.weight }
+            return edgesForIndex(u).filter { $0.v == v }.map { $0.weight }
         }
         return []
     }
@@ -156,6 +158,7 @@ extension Graph where E: WeightedEdgeProtocol {
 public final class CodableWeightedGraph<V: Codable & Equatable, W: Comparable & Numeric & Codable> : WeightedGraph<V, W>, Codable {
     enum CodingKeys: String, CodingKey {
         case vertices = "vertices"
+        case incidenceLists = "incidenceLists"
         case edges = "edges"
     }
     
@@ -170,19 +173,22 @@ public final class CodableWeightedGraph<V: Codable & Equatable, W: Comparable & 
     public convenience init(fromGraph g: WeightedGraph<V, W>) {
         self.init()
         vertices = g.vertices
-        edges = g.edges
+        incidenceLists = g.incidenceLists
+        allEdges = g.allEdges
     }
     
     public required init(from decoder: Decoder) throws  {
         super.init()
         let rootContainer = try decoder.container(keyedBy: CodingKeys.self)
         self.vertices = try rootContainer.decode([V].self, forKey: CodingKeys.vertices)
-        self.edges = try rootContainer.decode([[E]].self, forKey: CodingKeys.edges)
+        self.incidenceLists = try rootContainer.decode([[Int]].self, forKey: CodingKeys.incidenceLists)
+        self.allEdges = try rootContainer.decode([E].self, forKey: CodingKeys.edges)
     }
     
     public func encode(to encoder: Encoder) throws {
         var rootContainer = encoder.container(keyedBy: CodingKeys.self)
         try rootContainer.encode(self.vertices, forKey: CodingKeys.vertices)
-        try rootContainer.encode(self.edges, forKey: CodingKeys.edges)
+        try rootContainer.encode(self.incidenceLists, forKey: CodingKeys.incidenceLists)
+        try rootContainer.encode(self.allEdges, forKey: CodingKeys.edges)
     }
 }

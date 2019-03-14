@@ -20,14 +20,16 @@
 public struct UnweightedEdge: Edge, CustomStringConvertible, Codable, Equatable {
     public var u: Int
     public var v: Int
+    public var directed: Bool
     
-    public init(u: Int, v: Int) {
+    public init(u: Int, v: Int, directed: Bool) {
         self.u = u
         self.v = v
+        self.directed = directed
     }
 
     public func reversed() -> UnweightedEdge {
-        return UnweightedEdge(u: v, v: u)
+        return UnweightedEdge(u: v, v: u, directed: directed)
     }
 
     // Implement Printable protocol
@@ -37,6 +39,12 @@ public struct UnweightedEdge: Edge, CustomStringConvertible, Codable, Equatable 
 
     // MARK: Operator Overloads
     static public func ==(lhs: UnweightedEdge, rhs: UnweightedEdge) -> Bool {
-        return lhs.u == rhs.u && lhs.v == rhs.v
+        guard lhs.directed == rhs.directed else { return false }
+
+        if lhs.directed {
+            return lhs.u == rhs.u && lhs.v == rhs.v
+        } else {
+            return (lhs.u == rhs.u && lhs.v == rhs.v) || (lhs.u == rhs.v && lhs.v == rhs.u)
+        }
     }
 }

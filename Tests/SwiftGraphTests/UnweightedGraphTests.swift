@@ -24,10 +24,10 @@ class UnweightedGraphTests: XCTestCase {
     func testEdgeExists() {
         let g = UnweightedGraph<String>(vertices: ["A", "B"])
         g.addEdge(from: "A", to: "B", directed: true)
-        XCTAssertTrue(g.edgeExists(from: "A", to: "B"))
-        XCTAssertFalse(g.edgeExists(from: "B", to: "A"))
-        XCTAssertFalse(g.edgeExists(from: "A", to: "Y"))
-        XCTAssertFalse(g.edgeExists(from: "X", to: "Y"))
+        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
+        XCTAssertFalse(g.vertex("B", isAdjacentTo: "A"))
+        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
+        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
     }
 
     func testPathInitializerUndirected() {
@@ -41,17 +41,17 @@ class UnweightedGraphTests: XCTestCase {
 
         let g2Path = UnweightedGraph(withPath:["Atlanta", "Boston"])
         XCTAssertEqual(g2Path.vertices, ["Atlanta", "Boston"], "g2Path: Expected vertices to be Atlanta and Boston")
-        XCTAssertEqual(g2Path.edgeCount, 2, "g2Path: Expected exactly 2 edges")
-        XCTAssertTrue(g2Path.edgeExists(from: "Atlanta", to: "Boston"), "g2Path: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g2Path.edgeExists(from: "Boston", to: "Atlanta"), "g2Path: Expected an edge from Boston to Atlanta")
+        XCTAssertEqual(g2Path.edgeCount, 1, "g2Path: Expected exactly 1 edge")
+        XCTAssertTrue(g2Path.vertex("Atlanta", isAdjacentTo: "Boston"), "g2Path: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g2Path.vertex("Boston", isAdjacentTo: "Atlanta"), "g2Path: Expected an edge from Boston to Atlanta")
 
         let g3Path = UnweightedGraph(withPath:["Atlanta", "Boston", "Chicago"])
         XCTAssertEqual(g3Path.vertices, ["Atlanta", "Boston", "Chicago"], "g3Path: Expected vertices to be Atlanta, Boston and Chicago")
-        XCTAssertEqual(g3Path.edgeCount, 4, "g3Path: Expected exactly 4 edges")
-        XCTAssertTrue(g3Path.edgeExists(from: "Atlanta", to: "Boston"), "g3Path: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g3Path.edgeExists(from: "Boston", to: "Atlanta"), "g3Path: Expected an edge from Boston to Atlanta")
-        XCTAssertTrue(g3Path.edgeExists(from: "Boston", to: "Chicago"), "g3Path: Expected an edge from Boston to Chicago")
-        XCTAssertTrue(g3Path.edgeExists(from: "Chicago", to: "Boston"), "g3Path: Expected an edge from Chicago to Boston")
+        XCTAssertEqual(g3Path.edgeCount, 2, "g3Path: Expected exactly 2 edges")
+        XCTAssertTrue(g3Path.vertex("Atlanta", isAdjacentTo: "Boston"), "g3Path: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g3Path.vertex("Boston", isAdjacentTo: "Atlanta"), "g3Path: Expected an edge from Boston to Atlanta")
+        XCTAssertTrue(g3Path.vertex("Boston", isAdjacentTo: "Chicago"), "g3Path: Expected an edge from Boston to Chicago")
+        XCTAssertTrue(g3Path.vertex("Chicago", isAdjacentTo: "Boston"), "g3Path: Expected an edge from Chicago to Boston")
     }
 
     func testPathInitializerDirected() {
@@ -66,13 +66,13 @@ class UnweightedGraphTests: XCTestCase {
         let g2Path = UnweightedGraph(withPath:["Atlanta", "Boston"], directed: true)
         XCTAssertEqual(g2Path.vertices, ["Atlanta", "Boston"], "g2Path: Expected vertices to be Atlanta and Boston")
         XCTAssertEqual(g2Path.edgeCount, 1, "g2Path: Expected exactly 1 edges")
-        XCTAssertTrue(g2Path.edgeExists(from: "Atlanta", to: "Boston"), "g2Path: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g2Path.vertex("Atlanta", isAdjacentTo: "Boston"), "g2Path: Expected an edge from Atlanta to Boston")
 
         let g3Path = UnweightedGraph(withPath:["Atlanta", "Boston", "Chicago"], directed: true)
         XCTAssertEqual(g3Path.vertices, ["Atlanta", "Boston", "Chicago"], "g3Path: Expected vertices to be Atlanta, Boston and Chicago")
         XCTAssertEqual(g3Path.edgeCount, 2, "g3Path: Expected exactly 2 edges")
-        XCTAssertTrue(g3Path.edgeExists(from: "Atlanta", to: "Boston"), "g3Path: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g3Path.edgeExists(from: "Boston", to: "Chicago"), "g3Path: Expected an edge from Boston to Chicago")
+        XCTAssertTrue(g3Path.vertex("Atlanta", isAdjacentTo: "Boston"), "g3Path: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g3Path.vertex("Boston", isAdjacentTo: "Chicago"), "g3Path: Expected an edge from Boston to Chicago")
     }
 
     func testCycleInitializerUndirected() {
@@ -82,24 +82,24 @@ class UnweightedGraphTests: XCTestCase {
 
         let g1Cycle = UnweightedGraph(withCycle:["Atlanta"])
         XCTAssertEqual(g1Cycle.vertices, ["Atlanta"], "g1Cycle: Expected only Atlanta vertex")
-        XCTAssertEqual(g1Cycle.edgeCount, 2, "g1Cycle: Expected 2 edges")
-        XCTAssertTrue(g1Cycle.edgeExists(from: "Atlanta", to: "Atlanta"), "g1Cycle: Expected an edge from Atlanta to Atlanta")
+        XCTAssertEqual(g1Cycle.edgeCount, 1, "g1Cycle: Expected 1 edge")
+        XCTAssertTrue(g1Cycle.vertex("Atlanta", isAdjacentTo: "Atlanta"), "g1Cycle: Expected an edge from Atlanta to Atlanta")
 
         let g2Cycle = UnweightedGraph(withCycle:["Atlanta", "Boston"])
         XCTAssertEqual(g2Cycle.vertices, ["Atlanta", "Boston"], "g2Cycle: Expected vertices to be Atlanta and Boston")
-        XCTAssertEqual(g2Cycle.edgeCount, 4, "g2Cycle: Expected exactly 4 edges")
-        XCTAssertTrue(g2Cycle.edgeExists(from: "Atlanta", to: "Boston"), "g2Cycle: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g2Cycle.edgeExists(from: "Boston", to: "Atlanta"), "g2Cycle: Expected an edge from Boston to Atlanta")
+        XCTAssertEqual(g2Cycle.edgeCount, 2, "g2Cycle: Expected exactly 2 edges")
+        XCTAssertTrue(g2Cycle.vertex("Atlanta", isAdjacentTo: "Boston"), "g2Cycle: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g2Cycle.vertex("Boston", isAdjacentTo: "Atlanta"), "g2Cycle: Expected an edge from Boston to Atlanta")
 
         let g3Cycle = UnweightedGraph(withCycle:["Atlanta", "Boston", "Chicago"])
         XCTAssertEqual(g3Cycle.vertices, ["Atlanta", "Boston", "Chicago"], "g3Cycle: Expected vertices to be Atlanta, Boston and Chicago")
-        XCTAssertEqual(g3Cycle.edgeCount, 6, "g3Path: Expected exactly 4 edges")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Atlanta", to: "Boston"), "g3Cycle: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Boston", to: "Atlanta"), "g3Cycle: Expected an edge from Boston to Atlanta")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Boston", to: "Chicago"), "g3Cycle: Expected an edge from Boston to Chicago")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Chicago", to: "Boston"), "g3Cycle: Expected an edge from Chicago to Boston")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Chicago", to: "Atlanta"), "g3Cycle: Expected an edge from Chicago to Atlanta")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Atlanta", to: "Chicago"), "g3Cycle: Expected an edge from Atlanta to Chicago")
+        XCTAssertEqual(g3Cycle.edgeCount, 3, "g3Path: Expected exactly 3 edges")
+        XCTAssertTrue(g3Cycle.vertex("Atlanta", isAdjacentTo: "Boston"), "g3Cycle: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g3Cycle.vertex("Boston", isAdjacentTo: "Atlanta"), "g3Cycle: Expected an edge from Boston to Atlanta")
+        XCTAssertTrue(g3Cycle.vertex("Boston", isAdjacentTo: "Chicago"), "g3Cycle: Expected an edge from Boston to Chicago")
+        XCTAssertTrue(g3Cycle.vertex("Chicago", isAdjacentTo: "Boston"), "g3Cycle: Expected an edge from Chicago to Boston")
+        XCTAssertTrue(g3Cycle.vertex("Chicago", isAdjacentTo: "Atlanta"), "g3Cycle: Expected an edge from Chicago to Atlanta")
+        XCTAssertTrue(g3Cycle.vertex("Atlanta", isAdjacentTo: "Chicago"), "g3Cycle: Expected an edge from Atlanta to Chicago")
     }
 
     func testCycleInitializerDirected() {
@@ -110,20 +110,20 @@ class UnweightedGraphTests: XCTestCase {
         let g1Cycle = UnweightedGraph(withCycle:["Atlanta"], directed: true)
         XCTAssertEqual(g1Cycle.vertices, ["Atlanta"], "g1Cycle: Expected only Atlanta vertex")
         XCTAssertEqual(g1Cycle.edgeCount, 1, "g1Cycle: Expected 1 edge")
-        XCTAssertTrue(g1Cycle.edgeExists(from: "Atlanta", to: "Atlanta"), "g1Cycle: Expected an edge from Atlanta to Atlanta")
+        XCTAssertTrue(g1Cycle.vertex("Atlanta", isAdjacentTo: "Atlanta"), "g1Cycle: Expected an edge from Atlanta to Atlanta")
 
         let g2Cycle = UnweightedGraph(withCycle:["Atlanta", "Boston"], directed: true)
         XCTAssertEqual(g2Cycle.vertices, ["Atlanta", "Boston"], "g2Cycle: Expected vertices to be Atlanta and Boston")
         XCTAssertEqual(g2Cycle.edgeCount, 2, "g2Cycle: Expected exactly 2 edges")
-        XCTAssertTrue(g2Cycle.edgeExists(from: "Atlanta", to: "Boston"), "g2Cycle: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g2Cycle.edgeExists(from: "Boston", to: "Atlanta"), "g2Cycle: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g2Cycle.vertex("Atlanta", isAdjacentTo: "Boston"), "g2Cycle: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g2Cycle.vertex("Boston", isAdjacentTo: "Atlanta"), "g2Cycle: Expected an edge from Atlanta to Boston")
 
         let g3Cycle = UnweightedGraph(withCycle:["Atlanta", "Boston", "Chicago"], directed: true)
         XCTAssertEqual(g3Cycle.vertices, ["Atlanta", "Boston", "Chicago"], "g3Cycle: Expected vertices to be Atlanta, Boston and Chicago")
         XCTAssertEqual(g3Cycle.edgeCount, 3, "g3Cycle: Expected exactly 4 edges")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Atlanta", to: "Boston"), "g3Cycle: Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Boston", to: "Chicago"), "g3Cycle: Expected an edge from Boston to Chicago")
-        XCTAssertTrue(g3Cycle.edgeExists(from: "Chicago", to: "Atlanta"), "g3Cycle: Expected an edge from Chicago to Atlanta")
+        XCTAssertTrue(g3Cycle.vertex("Atlanta", isAdjacentTo: "Boston"), "g3Cycle: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g3Cycle.vertex("Boston", isAdjacentTo: "Chicago"), "g3Cycle: Expected an edge from Boston to Chicago")
+        XCTAssertTrue(g3Cycle.vertex("Chicago", isAdjacentTo: "Atlanta"), "g3Cycle: Expected an edge from Chicago to Atlanta")
     }
 }
 
