@@ -33,7 +33,7 @@ class SwiftGraphCodableTests: XCTestCase {
     }
     
     let expectedString = """
-     {"edges":[[{"u":0,"v":1}],[{"u":1,"v":0}]],"vertices":["New York","Miami"]}
+     {"edges":[{"u":0,"v":1,"directed":false}],"incidenceLists":[[0],[0]],"vertices":["New York","Miami"]}
      """
     
     func testEncodableDecodable() {
