@@ -49,9 +49,8 @@ public extension Edge {
     func joins(index fromIndex: Int, toIndex: Int) -> Bool {
         if directed {
             return fromIndex == u && toIndex == v
-        } else {
-            return (fromIndex == u && toIndex == v) || (fromIndex == v && toIndex == u)
         }
+        return (fromIndex == u && toIndex == v) || (fromIndex == v && toIndex == u)
     }
 
     /// Checks that this edge is incident to a vertex.
@@ -65,9 +64,8 @@ public extension Edge {
     func incident(fromIndex: Int) -> Bool {
         if directed {
             return fromIndex == u
-        } else {
-            return fromIndex == u || fromIndex == v
         }
+        return fromIndex == u || fromIndex == v
     }
 
     /// Checks that this edge is incident to a vertex.
@@ -81,8 +79,7 @@ public extension Edge {
     func incident(toIndex: Int) -> Bool {
         if directed {
             return toIndex == v
-        } else {
-            return toIndex == v || toIndex == u
         }
+        return toIndex == v || toIndex == u
     }
 }
