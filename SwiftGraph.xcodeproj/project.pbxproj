@@ -140,7 +140,7 @@
 		B59A0CD3223B9FA000963D30 /* EdgeRepresentationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeRepresentationTests.swift; sourceTree = "<group>"; };
 		B59A0CD5223BA00800963D30 /* EdgeRemovalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeRemovalTests.swift; sourceTree = "<group>"; };
 		B59A0CD7223BA6DA00963D30 /* EdgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeTests.swift; sourceTree = "<group>"; };
-		B59A0CDB223BB3A100963D30 /* Array+Mutate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Mutate.swift"; sourceTree = "<group>"; };
+		B59A0CDB223BB3A100963D30 /* Array+Mutate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Array+Mutate.swift"; path = "../Sources/SwiftGraph/Array+Mutate.swift"; sourceTree = "<group>"; };
 		B59A0CDE223BB5D400963D30 /* ArrayMutateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayMutateTests.swift; sourceTree = "<group>"; };
 		B59A0CE0223BDC0300963D30 /* VertexRemovalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VertexRemovalTests.swift; sourceTree = "<group>"; };
 		B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructorsPerformanceTests.swift; sourceTree = "<group>"; };
