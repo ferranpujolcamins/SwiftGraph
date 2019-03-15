@@ -36,12 +36,22 @@ public extension Edge {
     /// This happens when this edge is directed from the initial vertex to the terminal vertex
     /// or this edge is undirected and incident to both vertices.
     ///
+    /// - Warning:
+    /// `incident(fromIndex: i) && incident(toIndex: j) == true` does not imply
+    /// `joins(index: i, toIndex: j) == true`. For example, the undirected edge 0-1, is incident from 0 because you can "walk away from 0 to 1".
+    /// It is also incident to 0, because you can "walk back" from 1 to 0 throught the same edge.
+    /// However, it is not clearly joining 0 to 0.
+    ///
     /// - Parameters:
     ///   - fromIndex: The index of the initial vertex.
     ///   - toIndex: The index of the terminal vertex.
-    /// - Returns: True if the initial terminal can be reached from the terminal verrtex through this edge only.
+    /// - Returns: True if the initial terminal can be reached from the terminal vertex through this edge only.
     func joins(index fromIndex: Int, toIndex: Int) -> Bool {
-        return incident(fromIndex: fromIndex) && incident(toIndex: toIndex)
+        if directed {
+            return fromIndex == u && toIndex == v
+        } else {
+            return (fromIndex == u && toIndex == v) || (fromIndex == v && toIndex == u)
+        }
     }
 
     /// Checks that this edge is incident to a vertex.

@@ -23,7 +23,7 @@ class VertexRemovalTests: XCTestCase {
         XCTAssertEqual(g.neighborsForVertex("Miami")!, g.neighborsForVertex(g.neighborsForVertex("New York")![0])!, "Miami and New York Connected bi-directionally")
     }
 
-    func testCounts() {
+    func testCountsAfterRemoval() {
         let g: UnweightedGraph<String> = UnweightedGraph<String>()
         _ = g.addVertex("Atlanta")
         _ = g.addVertex("New York")
