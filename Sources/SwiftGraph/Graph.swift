@@ -245,15 +245,18 @@ extension Graph {
     ///
     /// - parameter index: The index of the vertex.
     public func removeVertexAtIndex(_ index: Int) {
+        // TODO: write more and better tests for this
         edgesFor(index: index).forEach(removeEdge)
 
         // Renumber other edges
         for i in (index + 1)..<vertices.count {
             for edgeIndex in incidenceLists[i] {
                 var edge = allEdges[edgeIndex]
-                if edge.u > index { edge.u = edge.u - 1 }
-                if edge.v > index { edge.v = edge.v - 1 }
-                allEdges[edgeIndex] = edge
+                if edge.directed || edge.u == i {
+                    if edge.u > index { edge.u = edge.u - 1 }
+                    if edge.v > index { edge.v = edge.v - 1 }
+                    allEdges[edgeIndex] = edge
+                }
             }
         }
 

@@ -38,4 +38,23 @@ class VertexRemovalTests: XCTestCase {
         XCTAssertEqual(g.vertexCount, 2, "2 total vertices")
         XCTAssertEqual(g.edgeCount, 1, "1 total edges")
     }
+
+    func testFirstVertexRemoval() {
+        let g: UnweightedGraph<String> = UnweightedGraph<String>()
+        _ = g.addVertex("Atlanta")
+        _ = g.addVertex("New York")
+        _ = g.addVertex("Miami")
+        g.addEdge(from: "Atlanta", to: "New York")
+        g.addEdge(from: "Miami", to: "Atlanta")
+        g.addEdge(from: "New York", to: "Miami")
+        g.removeVertex("Atlanta")
+        XCTAssertEqual(g.vertices, ["New York", "Miami"])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: false),
+        ])
+        XCTAssertEqual(g.incidenceLists, [
+            [0],
+            [0]
+        ])
+    }
 }
