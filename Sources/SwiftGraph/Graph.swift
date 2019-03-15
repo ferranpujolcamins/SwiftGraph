@@ -79,7 +79,7 @@ extension Graph {
     /// - parameter index: The index for the vertex to find the neighbors of.
     /// - returns: An array of the neighbor vertices.
     public func neighborsForIndex(_ index: Int) -> [V] {
-        return edgesForIndex(index).map { self.vertices[$0.v] }
+        return edgesForIndex(index, aligned: true).map { vertices[$0.v] }
     }
     
     /// Find all of the neighbors of a given Vertex.
@@ -96,16 +96,27 @@ extension Graph {
     /// Find all of the edges of a vertex at a given index.
     ///
     /// - parameter index: The index for the vertex to find the children of.
-    public func edgesForIndex(_ index: Int) -> [E] {
-        return incidenceLists[index].map { allEdges[$0] }
+    /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial index of all the edges is `index`.
+    public func edgesForIndex(_ index: Int, aligned: Bool = false) -> [E] {
+        let edges = incidenceLists[index].map { allEdges[$0] }
+        if aligned {
+            return edges.map {
+                if $0.u != index {
+                    return $0.reversed()
+                }
+                return $0
+            }
+        }
+        return edges
     }
     
     /// Find all of the edges of a given vertex.
     ///
     /// - parameter vertex: The vertex to find the edges of.
-    public func edgesForVertex(_ vertex: V) -> [E]? {
+    /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial vertex of all the edges is `vertex`.
+    public func edgesForVertex(_ vertex: V, aligned: Bool = false) -> [E]? {
         if let i = indexOfVertex(vertex) {
-            return edgesForIndex(i)
+            return edgesForIndex(i, aligned: aligned)
         }
         return nil
     }
