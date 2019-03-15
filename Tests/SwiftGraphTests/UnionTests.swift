@@ -46,10 +46,10 @@ class UnionTests: XCTestCase {
         let u = UnweightedUniqueElementsGraph(unionOf: g1, g2)
 
         XCTAssertEqual(u.vertices, ["Atlanta", "Boston", "Chicago"], "Expected vertices on the result graph to be Atlanta, Boston and Chicago.")
-        XCTAssertEqual(u.edgeCount, 3, "Expected 3 edges on the result graph.")
-        XCTAssertTrue(u.edgeExists(from: "Atlanta", to: "Boston"), "Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(u.edgeExists(from: "Boston", to: "Chicago"), "Expected an edge from Boston to Chicago")
-        XCTAssertTrue(u.edgeExists(from: "Chicago", to: "Boston"), "Expected an edge from Chicago to Boston")
+        XCTAssertEqual(u.edgeCount, 2, "Expected 2 edges on the result graph.")
+        XCTAssertTrue(u.vertex("Atlanta", isAdjacentTo: "Boston"), "Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(u.vertex("Boston", isAdjacentTo: "Chicago"), "Expected an edge from Boston to Chicago")
+        XCTAssertTrue(u.vertex("Chicago", isAdjacentTo: "Boston"), "Expected an edge from Chicago to Boston")
     }
 
     func testUnionFirstInCommon() {
@@ -61,10 +61,10 @@ class UnionTests: XCTestCase {
         let u = UnweightedUniqueElementsGraph(unionOf: g1, g2)
 
         XCTAssertEqual(u.vertices, ["Atlanta", "Boston", "Chicago"], "Expected vertices on the result graph to be Atlanta, Boston and Chicago.")
-        XCTAssertEqual(u.edgeCount, 3, "Expected 3 edges on the result graph.")
-        XCTAssertTrue(u.edgeExists(from: "Atlanta", to: "Boston"), "Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(u.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Atlanta to Chicago")
-        XCTAssertTrue(u.edgeExists(from: "Chicago", to: "Atlanta"), "Expected an edge from Chicago to Atlanta")
+        XCTAssertEqual(u.edgeCount, 2, "Expected 2 edges on the result graph.")
+        XCTAssertTrue(u.vertex("Atlanta", isAdjacentTo: "Boston"), "Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(u.vertex("Atlanta", isAdjacentTo: "Chicago"), "Expected an edge from Atlanta to Chicago")
+        XCTAssertTrue(u.vertex("Chicago", isAdjacentTo: "Atlanta"), "Expected an edge from Chicago to Atlanta")
     }
 
     func testDisjointUnion() {
@@ -76,10 +76,10 @@ class UnionTests: XCTestCase {
         let u = UnweightedUniqueElementsGraph(unionOf: g1, g2)
 
         XCTAssertEqual(u.vertices, ["Atlanta", "Boston", "Chicago", "Denver"], "Expected vertices on the result graph to be Atlanta, Boston, Chicago and Denver.")
-        XCTAssertEqual(u.edgeCount, 3, "Expected 3 edges on the result graph.")
-        XCTAssertTrue(u.edgeExists(from: "Atlanta", to: "Boston"), "Expected an edge from Atlanta to Boston")
-        XCTAssertTrue(u.edgeExists(from: "Chicago", to: "Denver"), "Expected an edge from Chicago to Denver")
-        XCTAssertTrue(u.edgeExists(from: "Denver", to: "Chicago"), "Expected an edge from Denver to Chicago")
+        XCTAssertEqual(u.edgeCount, 2, "Expected 2 edges on the result graph.")
+        XCTAssertTrue(u.vertex("Atlanta", isAdjacentTo: "Boston"), "Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(u.vertex("Chicago", isAdjacentTo: "Denver"), "Expected an edge from Chicago to Denver")
+        XCTAssertTrue(u.vertex("Denver", isAdjacentTo: "Chicago"), "Expected an edge from Denver to Chicago")
     }
 
     func testImmutabilityOfInputGraphs() {
@@ -92,11 +92,11 @@ class UnionTests: XCTestCase {
 
         XCTAssertEqual(g1.vertices, ["Atlanta", "Boston"], "g1: Expected vertices to be Atlanta and Boston.")
         XCTAssertEqual(g1.edgeCount, 1, "g1: Expected exactly 1 edge")
-        XCTAssertTrue(g1.edgeExists(from: "Atlanta", to: "Boston"), "g1: Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(g1.vertex("Atlanta", isAdjacentTo: "Boston"), "g1: Expected an edge from Atlanta to Boston")
         XCTAssertEqual(g2.vertices, ["Boston", "Chicago"], "g2: Expected vertices to be Boston and Chicago.")
-        XCTAssertEqual(g2.edgeCount, 2, "g2: Expected exactly 2 edges")
-        XCTAssertTrue(g2.edgeExists(from: "Boston", to: "Chicago"), "g2: Expected an edge from Boston to Chicago")
-        XCTAssertTrue(g2.edgeExists(from: "Chicago", to: "Boston"), "g2: Expected an edge from Chicago to Boston")
+        XCTAssertEqual(g2.edgeCount, 1, "g2: Expected exactly 1 edge")
+        XCTAssertTrue(g2.vertex("Boston", isAdjacentTo: "Chicago"), "g2: Expected an edge from Boston to Chicago")
+        XCTAssertTrue(g2.vertex("Chicago", isAdjacentTo: "Boston"), "g2: Expected an edge from Chicago to Boston")
     }
 
 
@@ -109,13 +109,13 @@ class UnionTests: XCTestCase {
         
         XCTAssertEqual(result1.vertices, g.vertices, "Expected same vertices after left union with empty graph")
         XCTAssertEqual(result1.edgeCount, 1, "Expected same edge count after left union with empty graph")
-        XCTAssertTrue(result1.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Chicago to Atlanta after left union with empty graph")
+        XCTAssertTrue(result1.vertex("Atlanta", isAdjacentTo: "Chicago"), "Expected an edge from Chicago to Atlanta after left union with empty graph")
         
         let result2 = UnweightedUniqueElementsGraph(unionOf: g, eg)
         
         XCTAssertEqual(result2.vertices, g.vertices, "Expected same vertices after right union with empty graph")
         XCTAssertEqual(result2.edgeCount, 1, "Expected same edge count after right union with empty graph")
-        XCTAssertTrue(result2.edgeExists(from: "Atlanta", to: "Chicago"), "Expected an edge from Chicago to Atlanta after right union with empty graph")
+        XCTAssertTrue(result2.vertex("Atlanta", isAdjacentTo: "Chicago"), "Expected an edge from Chicago to Atlanta after right union with empty graph")
     }
 
     func testUnionWithSelf() {
@@ -125,7 +125,7 @@ class UnionTests: XCTestCase {
         let u = UnweightedUniqueElementsGraph(unionOf: g, g)
         XCTAssertEqual(u.vertices, g.vertices, "Expected same vertices after union with self")
         XCTAssertEqual(u.edgeCount, 1, "Expected same edge count after union to self")
-        XCTAssertTrue(u.edgeExists(from: "Atlanta", to: "Boston"), "Expected an edge from Atlanta to Boston")
+        XCTAssertTrue(u.vertex("Atlanta", isAdjacentTo: "Boston"), "Expected an edge from Atlanta to Boston")
     }
 
     func testCommutativity() {
@@ -156,13 +156,13 @@ class UnionTests: XCTestCase {
 
         XCTAssertTrue(arraysHaveSameElements(g12_3.vertices, g1_23.vertices), "Expected same vertices for (g1 ∪ g2) ∪ g3 and g1 ∪ (g2 ∪ g3)")
 
-        XCTAssertTrue(g12_3.edgeExists(from: "A", to: "B"), "(g1 ∪ g2) ∪ g3: Expected an edge from A to B")
-        XCTAssertTrue(g12_3.edgeExists(from: "B", to: "C"), "(g1 ∪ g2) ∪ g3: Expected an edge from B to C")
-        XCTAssertTrue(g12_3.edgeExists(from: "C", to: "A"), "(g1 ∪ g2) ∪ g3: Expected an edge from C to A")
+        XCTAssertTrue(g12_3.vertex("A", isAdjacentTo: "B"), "(g1 ∪ g2) ∪ g3: Expected an edge from A to B")
+        XCTAssertTrue(g12_3.vertex("B", isAdjacentTo: "C"), "(g1 ∪ g2) ∪ g3: Expected an edge from B to C")
+        XCTAssertTrue(g12_3.vertex("C", isAdjacentTo: "A"), "(g1 ∪ g2) ∪ g3: Expected an edge from C to A")
 
-        XCTAssertTrue(g1_23.edgeExists(from: "A", to: "B"), "g1 ∪ (g2 ∪ g3): Expected an edge from A to B")
-        XCTAssertTrue(g1_23.edgeExists(from: "B", to: "C"), "g1 ∪ (g2 ∪ g3): Expected an edge from B to C")
-        XCTAssertTrue(g1_23.edgeExists(from: "C", to: "A"), "g1 ∪ (g2 ∪ g3): Expected an edge from C to A")
+        XCTAssertTrue(g1_23.vertex("A", isAdjacentTo: "B"), "g1 ∪ (g2 ∪ g3): Expected an edge from A to B")
+        XCTAssertTrue(g1_23.vertex("B", isAdjacentTo: "C"), "g1 ∪ (g2 ∪ g3): Expected an edge from B to C")
+        XCTAssertTrue(g1_23.vertex("C", isAdjacentTo: "A"), "g1 ∪ (g2 ∪ g3): Expected an edge from C to A")
     }
 
     func testMultipleParameters() {
@@ -173,8 +173,8 @@ class UnionTests: XCTestCase {
         let g = UnweightedUniqueElementsGraph(unionOf: g1, g2, g3)
 
         XCTAssertEqual(g.vertices, ["A", "B", "C"], "g: Expected vertices to be A, B and C")
-        XCTAssertTrue(g.edgeExists(from: "A", to: "B"), "g: Expected an edge from A to B")
-        XCTAssertTrue(g.edgeExists(from: "B", to: "C"), "g: Expected an edge from B to C")
-        XCTAssertTrue(g.edgeExists(from: "C", to: "A"), "g: Expected an edge from C to A")
+        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"), "g: Expected an edge from A to B")
+        XCTAssertTrue(g.vertex("B", isAdjacentTo: "C"), "g: Expected an edge from B to C")
+        XCTAssertTrue(g.vertex("C", isAdjacentTo: "A"), "g: Expected an edge from C to A")
     }
 }
