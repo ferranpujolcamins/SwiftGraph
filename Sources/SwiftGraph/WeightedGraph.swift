@@ -133,8 +133,7 @@ extension Graph where E: WeightedEdgeProtocol {
     /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path having the specified weight.
     public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int, havingWeight weight: W) -> Bool {
         return edgesForIndex(initialIndex).contains(where: {
-            (($0.u == initialIndex && $0.v == terminalIndex) || ($0.u == terminalIndex && $0.v == initialIndex))
-                && $0.weight == weight
+            $0.joins(index: initialIndex, toIndex: terminalIndex) && $0.weight == weight
         })
     }
 
