@@ -40,11 +40,39 @@ public extension Edge {
     ///   - fromIndex: The index of the initial vertex.
     ///   - toIndex: The index of the terminal vertex.
     /// - Returns: True if the initial terminal can be reached from the terminal verrtex through this edge only.
-    func connects(fromIndex: Int, toIndex: Int) -> Bool {
+    func joins(index fromIndex: Int, toIndex: Int) -> Bool {
+        return incident(fromIndex: fromIndex) && incident(toIndex: toIndex)
+    }
+
+    /// Checks that this edge is incident to a vertex.
+    ///
+    /// This happens when one of the following is true:
+    /// - This edge is directed and u is equal to the index we are checking to.
+    /// - This edge is undirected and u, v or both are equal to the index we are checking to.
+    ///
+    /// - Parameter fromIndex: The index of the vertex to check incidence to.
+    /// - Returns: `true` if the vertex is incident from this edge. `false`otherwise.
+    func incident(fromIndex: Int) -> Bool {
         if directed {
-            return fromIndex == u && toIndex == v
+            return fromIndex == u
         } else {
-            return (fromIndex == u && toIndex == v) || (fromIndex == v && toIndex == u)
+            return fromIndex == u || fromIndex == v
+        }
+    }
+
+    /// Checks that this edge is incident to a vertex.
+    ///
+    /// This happens when one of the following is true:
+    /// - This edge is directed and v is equal to the index we are checking to.
+    /// - This edge is undirected and u, v or both are equal to the index we are checking to.
+    ///
+    /// - Parameter toIndex: The index of the vertex to check incidence to.
+    /// - Returns: `true` if the vertex is incident to this edge. `false`otherwise.
+    func incident(toIndex: Int) -> Bool {
+        if directed {
+            return toIndex == v
+        } else {
+            return toIndex == v || toIndex == u
         }
     }
 }

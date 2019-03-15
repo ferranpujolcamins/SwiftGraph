@@ -13,20 +13,20 @@ class EdgeTests: XCTestCase {
 
     func testDirectedEdgeConnects() {
         let edge = UnweightedEdge(u: 0, v: 1, directed: true)
-        XCTAssertTrue(edge.connects(fromIndex: 0, toIndex: 1))
-        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 0))
-        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 2))
-        XCTAssertFalse(edge.connects(fromIndex: 0, toIndex: 2))
-        XCTAssertFalse(edge.connects(fromIndex: 2, toIndex: 3))
+        XCTAssertTrue(edge.joins(index: 0, toIndex: 1))
+        XCTAssertFalse(edge.joins(index: 1, toIndex: 0))
+        XCTAssertFalse(edge.joins(index: 1, toIndex: 2))
+        XCTAssertFalse(edge.joins(index: 0, toIndex: 2))
+        XCTAssertFalse(edge.joins(index: 2, toIndex: 3))
     }
 
     func testUndirectedEdgeConnects() {
         let edge = UnweightedEdge(u: 0, v: 1, directed: false)
-        XCTAssertTrue(edge.connects(fromIndex: 0, toIndex: 1))
-        XCTAssertTrue(edge.connects(fromIndex: 1, toIndex: 0))
-        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 2))
-        XCTAssertFalse(edge.connects(fromIndex: 0, toIndex: 2))
-        XCTAssertFalse(edge.connects(fromIndex: 2, toIndex: 3))
+        XCTAssertTrue(edge.joins(index: 0, toIndex: 1))
+        XCTAssertTrue(edge.joins(index: 1, toIndex: 0))
+        XCTAssertFalse(edge.joins(index: 1, toIndex: 2))
+        XCTAssertFalse(edge.joins(index: 0, toIndex: 2))
+        XCTAssertFalse(edge.joins(index: 2, toIndex: 3))
     }
 
     func testUnweightedEdgeEquality() {

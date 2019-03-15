@@ -41,6 +41,6 @@ public struct UnweightedEdge: Edge, CustomStringConvertible, Codable, Equatable 
     static public func ==(lhs: UnweightedEdge, rhs: UnweightedEdge) -> Bool {
         guard lhs.directed == rhs.directed else { return false }
 
-        return lhs.connects(fromIndex: rhs.u, toIndex: rhs.v)
+        return lhs.joins(index: rhs.u, toIndex: rhs.v)
     }
 }

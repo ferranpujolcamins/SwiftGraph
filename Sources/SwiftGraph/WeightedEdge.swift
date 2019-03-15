@@ -55,7 +55,7 @@ public struct WeightedEdge<W: Equatable>: Edge, CustomStringConvertible, Equatab
     static public func == <W>(lhs: WeightedEdge<W>, rhs: WeightedEdge<W>) -> Bool {
         guard lhs.directed == rhs.directed else { return false }
 
-        return lhs.connects(fromIndex: rhs.u, toIndex: rhs.v) && lhs.weight == rhs.weight
+        return lhs.joins(index: rhs.u, toIndex: rhs.v) && lhs.weight == rhs.weight
     }
 
 }

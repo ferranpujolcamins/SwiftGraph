@@ -154,7 +154,7 @@ extension Graph {
     /// - parameter bidirectional: Remove edges coming back (to -> from)
     public func removeAllEdges(from: Int, to: Int, bidirectional: Bool = true) {
         edgesForIndex(from)
-            .filter { $0.connects(fromIndex: from, toIndex: to) }
+            .filter { $0.joins(index: from, toIndex: to) }
             .forEach {
                 removeEdge($0)
             }
@@ -247,7 +247,7 @@ extension Graph {
     /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path.
     public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int) -> Bool {
         return edgesForIndex(initialIndex).contains(where: {
-            $0.connects(fromIndex: initialIndex, toIndex: terminalIndex)
+            $0.joins(index: initialIndex, toIndex: terminalIndex)
         })
     }
 
