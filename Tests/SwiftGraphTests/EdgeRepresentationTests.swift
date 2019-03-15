@@ -149,4 +149,82 @@ class EdgeRepresentationTests: XCTestCase {
             [0, 1]
         ])
     }
+
+    func testRepresentationAfterRemoveDirectedEdge() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "B", to: "C", directed: true)
+
+        XCTAssertEqual(g.incidenceLists, [[0], [1], []])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: true),
+            UnweightedEdge(u: 1, v: 2, directed: true)
+        ])
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: true))
+        XCTAssertEqual(g.incidenceLists, [[], [0], []])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 1, v: 2, directed: true)
+        ])
+    }
+
+    func testRepresentationAfterRemoveUndirectedEdge() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: false)
+        g.addEdge(from: "B", to: "C", directed: false)
+
+        XCTAssertEqual(g.incidenceLists, [[0], [0, 1], [1]])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: false),
+            UnweightedEdge(u: 1, v: 2, directed: false)
+        ])
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: false))
+        XCTAssertEqual(g.incidenceLists, [[], [0], [0]])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 1, v: 2, directed: false)
+        ])
+    }
+
+    func testRepresentationAfterRemoveDuplicatedDirectedEdge() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "B", to: "C", directed: true)
+
+        XCTAssertEqual(g.incidenceLists, [[0, 1], [2], []])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: true),
+            UnweightedEdge(u: 0, v: 1, directed: true),
+            UnweightedEdge(u: 1, v: 2, directed: true)
+        ])
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: true))
+        XCTAssertEqual(g.incidenceLists, [[0], [1], []])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: true),
+            UnweightedEdge(u: 1, v: 2, directed: true)
+        ])
+    }
+
+    func testRepresentationAfterRemoveDuplicatedUndirectedEdge() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: false)
+        g.addEdge(from: "A", to: "B", directed: false)
+        g.addEdge(from: "B", to: "C", directed: false)
+
+        XCTAssertEqual(g.incidenceLists, [[0, 1], [0, 1, 2], [2]])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: false),
+            UnweightedEdge(u: 0, v: 1, directed: false),
+            UnweightedEdge(u: 1, v: 2, directed: false)
+        ])
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: false))
+        XCTAssertEqual(g.incidenceLists, [[0], [0, 1], [1]])
+        XCTAssertEqual(g.allEdges, [
+            UnweightedEdge(u: 0, v: 1, directed: false),
+            UnweightedEdge(u: 1, v: 2, directed: false)
+        ])
+    }
 }

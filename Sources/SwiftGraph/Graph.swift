@@ -144,7 +144,7 @@ extension Graph {
             incidenceLists[e.v].append(index)
         }
     }
-/*
+
     /// Removes all directed edges from index 'from' to index 'to' and all undirected edges from index 'from' to index 'to'.
     ///
     /// Directed edges from index 'to' to index 'from' won't be deleted.
@@ -153,13 +153,17 @@ extension Graph {
     /// - parameter to: The ending vertex's index.
     /// - parameter bidirectional: Remove edges coming back (to -> from)
     public func removeAllEdges(from: Int, to: Int, bidirectional: Bool = true) {
-        incidenceLists[from].removeAll(where: { $0.v == to })
-        
+        edgesForIndex(from)
+            .filter { $0.connects(fromIndex: from, toIndex: to) }
+            .forEach {
+                removeEdge($0)
+            }
+
         if bidirectional {
-            edges[to].removeAll(where: { $0.v == from })
+            removeAllEdges(from: to, to: from, bidirectional: false)
         }
     }
-    
+
     /// Removes all edges in both directions between two vertices.
     ///
     /// - parameter from: The starting vertex.
@@ -172,62 +176,50 @@ extension Graph {
             }
         }
     }
-    
-    /// Remove the first edge found to be equal to *e*
+
+    /// Remove the first edge found to be equal to `e`
     ///
     /// - parameter e: The edge to remove.
     public func removeEdge(_ e: E) {
-        if let index = edges[e.u].firstIndex(where: { $0 == e }) {
-            edges[e.u].remove(at: index)
+        if let uIndex = incidenceLists[e.u].firstIndex(where: { allEdges[$0] == e }) {
+            let allEdgesIndex = incidenceLists[e.u][uIndex]
+            incidenceLists[e.u].remove(at: uIndex)
+            if !e.directed {
+                if let vIndex = incidenceLists[e.v].firstIndex(where: { allEdges[$0] == e }) {
+                    incidenceLists[e.v].remove(at: vIndex)
+                }
+            }
+            allEdges.remove(at: allEdgesIndex)
+            incidenceLists.mutate { (vertexIndex, edges) in
+                edges.mutate({ (_, edgeIndex) in
+                    if edgeIndex > allEdgesIndex {
+                        edgeIndex = edgeIndex - 1
+                    }
+                })
+            }
         }
     }
-    
+
     /// Removes a vertex at a specified index, all of the edges attached to it, and renumbers the indexes of the rest of the edges.
     ///
     /// - parameter index: The index of the vertex.
     public func removeVertexAtIndex(_ index: Int) {
-        //remove all edges ending at the vertex, first doing the ones below it
-        //renumber edges that end after the index
-        for j in 0..<index {
-            var toRemove: [Int] = [Int]()
-            for l in 0..<edges[j].count {
-                if edges[j][l].v == index {
-                    toRemove.append(l)
-                    continue
-                }
-                if edges[j][l].v > index {
-                    edges[j][l].v -= 1
-                }
-            }
-            for f in toRemove.reversed() {
-                edges[j].remove(at: f)
+        edgesForIndex(index).forEach(removeEdge)
+
+        // Renumber other edges
+        for i in (index + 1)..<vertices.count {
+            for edgeIndex in incidenceLists[i] {
+                var edge = allEdges[edgeIndex]
+                if edge.u > index { edge.u = edge.u - 1 }
+                if edge.v > index { edge.v = edge.v - 1 }
+                allEdges[edgeIndex] = edge
             }
         }
-        
-        //remove all edges after the vertex index wise
-        //renumber all edges after the vertex index wise
-        for j in (index + 1)..<edges.count {
-            var toRemove: [Int] = [Int]()
-            for l in 0..<edges[j].count {
-                if edges[j][l].v == index {
-                    toRemove.append(l)
-                    continue
-                }
-                edges[j][l].u -= 1
-                if edges[j][l].v > index {
-                    edges[j][l].v -= 1
-                }
-            }
-            for f in toRemove.reversed() {
-                edges[j].remove(at: f)
-            }
-        }
-        //println(self)
-        //remove the actual vertex and its edges
-        edges.remove(at: index)
+
+        incidenceLists.remove(at: index)
         vertices.remove(at: index)
     }
-    
+
     /// Removes the first occurence of a vertex, all of the edges attached to it, and renumbers the indexes of the rest of the edges.
     ///
     /// - parameter vertex: The vertex to be removed..
@@ -236,7 +228,7 @@ extension Graph {
             removeVertexAtIndex(i)
         }
     }
-*/
+
     /// Check whether an edge is in the graph or not.
     ///
     /// - parameter edge: The edge to find in the graph.

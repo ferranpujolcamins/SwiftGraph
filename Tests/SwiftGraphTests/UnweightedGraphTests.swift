@@ -116,5 +116,18 @@ class UnweightedGraphTests: XCTestCase {
         XCTAssertTrue(g3Cycle.vertex("Boston", isAdjacentTo: "Chicago"), "g3Cycle: Expected an edge from Boston to Chicago")
         XCTAssertTrue(g3Cycle.vertex("Chicago", isAdjacentTo: "Atlanta"), "g3Cycle: Expected an edge from Chicago to Atlanta")
     }
+
+    func testRepeatedEdges() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "B", to: "C", directed: false)
+        g.addEdge(from: "B", to: "C", directed: false)
+        
+        XCTAssertEqual(g.edgeCount, 4)
+        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
+        XCTAssertTrue(g.vertex("B", isAdjacentTo: "C"))
+        XCTAssertFalse(g.vertex("A", isAdjacentTo: "C"))
+    }
 }
 

@@ -11,6 +11,18 @@ import SwiftGraph
 
 class EdgeRemovalTests: XCTestCase {
 
+    func testRemoveDirectedEdge() {
+        let g = UnweightedGraph(vertices: ["A", "B", "C"])
+        g.addEdge(from: "A", to: "B", directed: true)
+        g.addEdge(from: "B", to: "C", directed: true)
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: false))
+        XCTAssertEqual(g.edgeCount, 2)
+
+        g.removeEdge(UnweightedEdge(u: 0, v: 1, directed: true))
+        XCTAssertEqual(g.edgeCount, 1)
+    }
+
     func testRemoveAllEdges() {
         let graph = UnweightedGraph(vertices: ["0", "1", "2", "3", "4", "5", "6"])
 
@@ -22,20 +34,7 @@ class EdgeRemovalTests: XCTestCase {
         graph.addEdge(from: "4", to: "5", directed: false)
 
         graph.removeAllEdges(from: 2, to: 3, bidirectional: true)
-        XCTAssertFalse(graph.edgeExists(fromIndex: 2, toIndex: 3))
-        XCTAssertFalse(graph.edgeExists(fromIndex: 3, toIndex: 2))
+        XCTAssertFalse(graph.vertex(withIndex: 2, isAdjacentTo: 3))
+        XCTAssertFalse(graph.vertex(withIndex: 3, isAdjacentTo: 2))
     }
-
-    func testCitesInverseAfterRemove() {
-        let g: UnweightedGraph<String> = UnweightedGraph<String>()
-        _ = g.addVertex("Atlanta")
-        _ = g.addVertex("New York")
-        _ = g.addVertex("Miami")
-        g.addEdge(from: "Atlanta", to: "New York")
-        g.addEdge(from: "Miami", to: "Atlanta")
-        g.addEdge(from: "New York", to: "Miami")
-        g.removeVertex("Atlanta")
-        XCTAssertEqual(g.neighborsForVertex("Miami")!, g.neighborsForVertex(g.neighborsForVertex("New York")![0])!, "Miami and New York Connected bi-directionally")
-    }
-
 }
