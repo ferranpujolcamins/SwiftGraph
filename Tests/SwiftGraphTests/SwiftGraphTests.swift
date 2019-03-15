@@ -20,18 +20,7 @@ import XCTest
 @testable import SwiftGraph
 
 class SwiftGraphTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    
+
     func testSequenceTypeAndCollectionType() {
         let g: UnweightedGraph<String> = UnweightedGraph<String>()
         _ = g.addVertex("Atlanta")
@@ -43,22 +32,6 @@ class SwiftGraphTests: XCTestCase {
         }
         XCTAssertEqual(tempList, ["Atlanta", "New York", "Miami"], "Iterated Successfully")
         XCTAssertEqual(g[1], "New York", "Subscripted Successfully")
-    }
-    
-    func testCounts() {
-        let g: UnweightedGraph<String> = UnweightedGraph<String>()
-        _ = g.addVertex("Atlanta")
-        _ = g.addVertex("New York")
-        _ = g.addVertex("Miami")
-        g.addEdge(from: "Atlanta", to: "New York", directed: true)
-        g.addEdge(from: "Miami", to: "Atlanta", directed: true)
-        g.addEdge(from: "New York", to: "Miami", directed: true)
-        g.addEdge(from: "Atlanta", to: "Miami", directed: true)
-        XCTAssertEqual(g.vertexCount, 3, "3 total vertices")
-        XCTAssertEqual(g.edgeCount, 4, "4 total edges")
-        g.removeVertex("Atlanta")
-        XCTAssertEqual(g.vertexCount, 2, "2 total vertices")
-        XCTAssertEqual(g.edgeCount, 1, "1 total edges")
     }
     
     func testSubscript() {

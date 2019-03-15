@@ -132,7 +132,7 @@ extension Graph where E: WeightedEdgeProtocol {
     ///   - weight: The weight of the edge we are looking for.
     /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path having the specified weight.
     public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int, havingWeight weight: W) -> Bool {
-        return edgesForIndex(initialIndex).contains(where: {
+        return edgesIncidentFrom(index: initialIndex).contains(where: {
             $0.joins(index: initialIndex, toIndex: terminalIndex) && $0.weight == weight
         })
     }
@@ -164,7 +164,7 @@ extension Graph where E: WeightedEdgeProtocol {
     ///   - toIndex: The ending vertex index
     /// - Returns: An array with all the weights associated to edges between the provided indexes.
     public func weights(fromIndex initialIndex: Int, toIndex terminalIndex: Int) -> [W] {
-        return edgesForIndex(initialIndex).filter {
+        return edgesIncidentFrom(index: initialIndex).filter {
             ($0.u == initialIndex && $0.v == terminalIndex) || ($0.u == terminalIndex && $0.v == initialIndex)
             }.map { $0.weight }
     }

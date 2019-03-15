@@ -65,7 +65,7 @@ public extension Graph {
             if openPath.path.count > maxK { return cycles } // do we want to stop at a certain length k
             let tail = openPath.path.last?.v ?? openPath.start
             let head = openPath.start
-            let neighborEdges = edgesForIndex(tail, aligned: true)
+            let neighborEdges = edgesIncidentFrom(index: tail, aligned: true)
             for var neighborEdge in neighborEdges {
                 if neighborEdge.v == head {
                     cycles.append(openPath.path + [neighborEdge]) // found a cycle

@@ -39,7 +39,7 @@ public extension WeightedGraph where W: Comparable {
         
         func visit(_ index: Int) {
             visited[index] = true // mark as visited
-            for edge in edgesForIndex(index, aligned: true) { // add all edges coming from here to pq
+            for edge in edgesIncidentFrom(index: index, aligned: true) { // add all edges coming from here to pq
                 if !visited[edge.v] { pq.push(edge) }
             }
         }

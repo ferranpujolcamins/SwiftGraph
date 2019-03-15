@@ -79,7 +79,7 @@ extension Graph {
     /// - parameter index: The index for the vertex to find the neighbors of.
     /// - returns: An array of the neighbor vertices.
     public func neighborsForIndex(_ index: Int) -> [V] {
-        return edgesForIndex(index, aligned: true).map { vertices[$0.v] }
+        return edgesIncidentFrom(index: index, aligned: true).map { vertices[$0.v] }
     }
     
     /// Find all of the neighbors of a given Vertex.
@@ -97,7 +97,24 @@ extension Graph {
     ///
     /// - parameter index: The index for the vertex to find the children of.
     /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial index of all the edges is `index`.
-    public func edgesForIndex(_ index: Int, aligned: Bool = false) -> [E] {
+    /// - Returns: All the edges incident to, or incident from the vertex at index `index`.
+    public func edgesFor(index: Int, aligned: Bool = false) -> [E] {
+        return allEdges.filter { $0.incident(fromIndex: index) || $0.incident(toIndex: index) }
+    }
+
+    public func edgesFor(vertex: V, aligned: Bool = false) -> [E]? {
+        if let index = indexOfVertex(vertex) {
+            return allEdges.filter { $0.incident(fromIndex: index) || $0.incident(toIndex: index) }
+        }
+        return nil
+    }
+
+    /// Find all of the edges incident from the vertex at a given index.
+    ///
+    /// - parameter index: The index for the vertex to find the children of.
+    /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial index of all the edges is `index`.
+    /// - Returns: All the edges incident from the vertex at index `index`.
+    public func edgesIncidentFrom(index: Int, aligned: Bool = false) -> [E] {
         let edges = incidenceLists[index].map { allEdges[$0] }
         if aligned {
             return edges.map {
@@ -109,18 +126,31 @@ extension Graph {
         }
         return edges
     }
-    
-    /// Find all of the edges of a given vertex.
-    ///
-    /// - parameter vertex: The vertex to find the edges of.
-    /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial vertex of all the edges is `vertex`.
-    public func edgesForVertex(_ vertex: V, aligned: Bool = false) -> [E]? {
-        if let i = indexOfVertex(vertex) {
-            return edgesForIndex(i, aligned: aligned)
+
+    public func edgesIncidentFrom(vertex: V, aligned: Bool = false) -> [E]? {
+        if let index = indexOfVertex(vertex) {
+            return allEdges.filter { $0.incident(fromIndex: index) }
         }
         return nil
     }
-    
+
+    /// Find all of the edges incident to the vertex at a given index.
+    ///
+    /// - parameter index: The index for the vertex to find the children of.
+    /// - parameter aligned: If true, reverses the undirected edges if necessary in order to make sure that the initial index of all the edges is `index`.
+    /// - Returns: All the edges incident to the vertex at index `index`.
+    public func edgesIncidentTo(index: Int, aligned: Bool = false) -> [E] {
+        return allEdges.filter { $0.incident(toIndex: index) }
+    }
+
+    public func edgesIncidentTo(vertex: V, aligned: Bool = false) -> [E]? {
+        if let index = indexOfVertex(vertex) {
+            return allEdges.filter { $0.incident(toIndex: index) }
+        }
+        return nil
+    }
+
+
     /// Find the first occurence of a vertex.
     ///
     /// - parameter vertex: The vertex you are looking for.
@@ -164,7 +194,7 @@ extension Graph {
     /// - parameter to: The ending vertex's index.
     /// - parameter bidirectional: Remove edges coming back (to -> from)
     public func removeAllEdges(from: Int, to: Int, bidirectional: Bool = true) {
-        edgesForIndex(from)
+        edgesFor(index: from)
             .filter { $0.joins(index: from, toIndex: to) }
             .forEach {
                 removeEdge($0)
@@ -215,7 +245,7 @@ extension Graph {
     ///
     /// - parameter index: The index of the vertex.
     public func removeVertexAtIndex(_ index: Int) {
-        edgesForIndex(index).forEach(removeEdge)
+        edgesFor(index: index).forEach(removeEdge)
 
         // Renumber other edges
         for i in (index + 1)..<vertices.count {
@@ -257,7 +287,7 @@ extension Graph {
     ///   - terminalIndex: The index of the terminal vertex.
     /// - Returns: Returns true if the vertex with `terminalIndex` can be reached from the vertex with `initialIndex` through a 1-path.
     public func vertex(withIndex initialIndex: Int, isAdjacentTo terminalIndex: Int) -> Bool {
-        return edgesForIndex(initialIndex).contains(where: {
+        return edgesIncidentFrom(index: initialIndex).contains(where: {
             $0.joins(index: initialIndex, toIndex: terminalIndex)
         })
     }
