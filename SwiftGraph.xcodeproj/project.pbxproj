@@ -32,8 +32,10 @@
 		B5437D56223B180F00A7F1B6 /* EquatableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EF1436217913F1008FCC5C /* EquatableTypes.swift */; };
 		B5437D57223B180F00A7F1B6 /* ArraysHaveSameElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F07B6A222EB43000824F08 /* ArraysHaveSameElements.swift */; };
 		B54FDA6E21729EFF00057C51 /* Constructors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54FDA6D21729EFF00057C51 /* Constructors.swift */; };
+		B59A0CD4223B9FA000963D30 /* EdgeRepresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A0CD3223B9FA000963D30 /* EdgeRepresentationTests.swift */; };
+		B59A0CD8223BA6DA00963D30 /* EdgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A0CD7223BA6DA00963D30 /* EdgeTests.swift */; };
 		B5D022B1217357480079F17C /* ConstructorsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */; };
-		B5D0AC6D223AC132002E0119 /* EdgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D0AC6C223AC132002E0119 /* EdgeTests.swift */; };
+		B5D0AC6D223AC132002E0119 /* AdjacencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D0AC6C223AC132002E0119 /* AdjacencyTests.swift */; };
 		B5D0AC71223ACEE8002E0119 /* UnweightedGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5100A4B208B97A800C7A73A /* UnweightedGraphTests.swift */; };
 		B5D229BC207BF30100151820 /* UniqueElementsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D229BB207BF30100151820 /* UniqueElementsGraph.swift */; };
 		B5EACB1D2172315E00E527BD /* SwiftGraph.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7985B8FB1E5A4FB800C100E7 /* SwiftGraph.framework */; };
@@ -117,8 +119,11 @@
 		B52ABD37208955B500FBF10C /* UnionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnionTests.swift; sourceTree = "<group>"; };
 		B54FDA6D21729EFF00057C51 /* Constructors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constructors.swift; path = ../Sources/SwiftGraph/Constructors.swift; sourceTree = "<group>"; };
 		B54FDA702172A34D00057C51 /* ConstructorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructorsTests.swift; sourceTree = "<group>"; };
+		B59A0CD3223B9FA000963D30 /* EdgeRepresentationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeRepresentationTests.swift; sourceTree = "<group>"; };
+		B59A0CD5223BA00800963D30 /* EdgeRemovalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeRemovalTests.swift; sourceTree = "<group>"; };
+		B59A0CD7223BA6DA00963D30 /* EdgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeTests.swift; sourceTree = "<group>"; };
 		B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstructorsPerformanceTests.swift; sourceTree = "<group>"; };
-		B5D0AC6C223AC132002E0119 /* EdgeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeTests.swift; sourceTree = "<group>"; };
+		B5D0AC6C223AC132002E0119 /* AdjacencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjacencyTests.swift; sourceTree = "<group>"; };
 		B5D229BB207BF30100151820 /* UniqueElementsGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UniqueElementsGraph.swift; path = Sources/SwiftGraph/UniqueElementsGraph.swift; sourceTree = SOURCE_ROOT; };
 		B5D229BD207BF36900151820 /* UniqueElementsGraphTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniqueElementsGraphTests.swift; sourceTree = "<group>"; };
 		B5DD6DA42171EEE1007EFF44 /* SearchPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPerformanceTests.swift; sourceTree = "<group>"; };
@@ -276,7 +281,10 @@
 				B52ABD37208955B500FBF10C /* UnionTests.swift */,
 				55F5EA5A2151E33100DFC301 /* SwiftGraphCodableTests.swift */,
 				B5F07B6C222EB4BD00824F08 /* WeightedGraphTests.swift */,
-				B5D0AC6C223AC132002E0119 /* EdgeTests.swift */,
+				B5D0AC6C223AC132002E0119 /* AdjacencyTests.swift */,
+				B59A0CD3223B9FA000963D30 /* EdgeRepresentationTests.swift */,
+				B59A0CD5223BA00800963D30 /* EdgeRemovalTests.swift */,
+				B59A0CD7223BA6DA00963D30 /* EdgeTests.swift */,
 			);
 			name = SwiftGraphTests;
 			path = Tests/SwiftGraphTests;
@@ -537,8 +545,10 @@
 			files = (
 				B5437D56223B180F00A7F1B6 /* EquatableTypes.swift in Sources */,
 				B5D0AC71223ACEE8002E0119 /* UnweightedGraphTests.swift in Sources */,
+				B59A0CD8223BA6DA00963D30 /* EdgeTests.swift in Sources */,
 				B5437D57223B180F00A7F1B6 /* ArraysHaveSameElements.swift in Sources */,
-				B5D0AC6D223AC132002E0119 /* EdgeTests.swift in Sources */,
+				B59A0CD4223B9FA000963D30 /* EdgeRepresentationTests.swift in Sources */,
+				B5D0AC6D223AC132002E0119 /* AdjacencyTests.swift in Sources */,
 				B5437D55223B129800A7F1B6 /* WeightedGraphTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

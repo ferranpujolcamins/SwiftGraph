@@ -2,207 +2,88 @@
 //  EdgeTests.swift
 //  SwiftGraphTests
 //
-//  Copyright (c) 2018 Ferran Pujol Camins
+//  Created by Ferran Pujol Camins on 15/03/2019.
+//  Copyright © 2019 Oak Snow Consulting. All rights reserved.
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
 
 import XCTest
 import SwiftGraph
 
 class EdgeTests: XCTestCase {
 
-    // Test that we correctly store an undirected edge.
-    func testUndirectedEdgeRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: false)
-        XCTAssertEqual(g.allEdges, [UnweightedEdge(u: 0, v: 1, directed: false)])
-        XCTAssertEqual(g.incidenceLists, [
-            [0],
-            [0]
-        ])
+    func testDirectedEdgeConnects() {
+        let edge = UnweightedEdge(u: 0, v: 1, directed: true)
+        XCTAssertTrue(edge.connects(fromIndex: 0, toIndex: 1))
+        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 0))
+        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 2))
+        XCTAssertFalse(edge.connects(fromIndex: 0, toIndex: 2))
+        XCTAssertFalse(edge.connects(fromIndex: 2, toIndex: 3))
     }
 
-    // Test that we correctly store a directed edge.
-    func testDirectedEdgeRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: true)
-        XCTAssertEqual(g.allEdges, [UnweightedEdge(u: 0, v: 1, directed: true)])
-        XCTAssertEqual(g.incidenceLists, [
-            [0],
-            []
-        ])
+    func testUndirectedEdgeConnects() {
+        let edge = UnweightedEdge(u: 0, v: 1, directed: false)
+        XCTAssertTrue(edge.connects(fromIndex: 0, toIndex: 1))
+        XCTAssertTrue(edge.connects(fromIndex: 1, toIndex: 0))
+        XCTAssertFalse(edge.connects(fromIndex: 1, toIndex: 2))
+        XCTAssertFalse(edge.connects(fromIndex: 0, toIndex: 2))
+        XCTAssertFalse(edge.connects(fromIndex: 2, toIndex: 3))
     }
 
-    // Test that we correctly store two directed edges.
-    func testTwoDirectedEdgesRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: true)
-        g.addEdge(from: "A", to: "B", directed: true)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 1, directed: true),
-            UnweightedEdge(u: 0, v: 1, directed: true)
-            ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1],
-            []
-        ])
+    func testUnweightedEdgeEquality() {
+        let directedOracle = UnweightedEdge(u: 0, v: 1, directed: true)
+        let directed = UnweightedEdge(u: 0, v: 1, directed: true)
+        let directedReversed = UnweightedEdge(u: 1, v: 0, directed: true)
+        let directed2 = UnweightedEdge(u: 0, v: 2, directed: true)
+        let directed3 = UnweightedEdge(u: 3, v: 2, directed: true)
+
+        XCTAssertEqual(directedOracle, directed)
+        XCTAssertNotEqual(directedOracle, directedReversed)
+        XCTAssertNotEqual(directedOracle, directed2)
+        XCTAssertNotEqual(directedOracle, directed3)
+
+        let undirectedOracle = UnweightedEdge(u: 0, v: 1, directed: false)
+        let undirected = UnweightedEdge(u: 0, v: 1, directed: false)
+        let undirectedReversed = UnweightedEdge(u: 1, v: 0, directed: false)
+        let undirected2 = UnweightedEdge(u: 0, v: 2, directed: false)
+        let undirected3 = UnweightedEdge(u: 3, v: 2, directed: false)
+
+        XCTAssertEqual(undirectedOracle, undirected)
+        XCTAssertEqual(undirectedOracle, undirectedReversed)
+        XCTAssertNotEqual(undirectedOracle, undirected2)
+        XCTAssertNotEqual(undirectedOracle, undirected3)
+
+        XCTAssertNotEqual(directedOracle, undirectedOracle)
     }
 
-    // Test that we correctly store two undirected edges.
-    func testTwoUndirectedEdgesRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: false)
-        g.addEdge(from: "A", to: "B", directed: false)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 1, directed: false),
-            UnweightedEdge(u: 1, v: 0, directed: false)
-        ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1],
-            [0, 1]
-        ])
-    }
+    func testWeightedEdgeEquality() {
+        let directedOracle = WeightedEdge(u: 0, v: 1, directed: true, weight: 0)
+        let directed = WeightedEdge(u: 0, v: 1, directed: true, weight: 0)
+        let directedReversed = WeightedEdge(u: 1, v: 0, directed: true, weight: 0)
+        let directedDifferentWeight = WeightedEdge(u: 0, v: 1, directed: true, weight: 1)
+        let directed2 = WeightedEdge(u: 0, v: 2, directed: true, weight: 0)
+        let directed3 = WeightedEdge(u: 3, v: 2, directed: true, weight: 0)
 
-    // Test that we correctly store a directed edge and an undirected edge.
-    func testDirectedAndUndirectedEdgeRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: true)
-        g.addEdge(from: "A", to: "B", directed: false)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 1, directed: true),
-            UnweightedEdge(u: 1, v: 0, directed: false)
-        ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1],
-            [1]
-        ])
-    }
+        XCTAssertEqual(directedOracle, directed)
+        XCTAssertNotEqual(directedOracle, directedReversed)
+        XCTAssertNotEqual(directedOracle, directedDifferentWeight)
+        XCTAssertNotEqual(directedOracle, directed2)
+        XCTAssertNotEqual(directedOracle, directed3)
 
-    // Test that we correctly store an undirected loop.
-    func testUndirectedLoopRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A"])
-        g.addEdge(from: "A", to: "A", directed: false)
-        XCTAssertEqual(g.allEdges, [UnweightedEdge(u: 0, v: 0, directed: false)])
-        XCTAssertEqual(g.incidenceLists, [
-            [0]
-        ])
-    }
+        let undirectedOracle = WeightedEdge(u: 0, v: 1, directed: false, weight: 0)
+        let undirected = WeightedEdge(u: 0, v: 1, directed: false, weight: 0)
+        let undirectedReversed = WeightedEdge(u: 1, v: 0, directed: false, weight: 0)
+        let undirectedDifferentWeight = WeightedEdge(u: 0, v: 1, directed: false, weight: 1)
+        let undirectedReversedDifferentWeight = WeightedEdge(u: 1, v: 0, directed: false, weight: 1)
+        let undirected2 = WeightedEdge(u: 0, v: 2, directed: false, weight: 0)
+        let undirected3 = WeightedEdge(u: 3, v: 2, directed: false, weight: 0)
 
-    // Test that we correctly store a directed loop.
-    func testDirectedLoopRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A"])
-        g.addEdge(from: "A", to: "A", directed: true)
-        XCTAssertEqual(g.allEdges, [UnweightedEdge(u: 0, v: 0, directed: true)])
-        XCTAssertEqual(g.incidenceLists, [
-            [0]
-        ])
-    }
+        XCTAssertEqual(undirectedOracle, undirected)
+        XCTAssertEqual(undirectedOracle, undirectedReversed)
+        XCTAssertNotEqual(undirectedOracle, undirectedDifferentWeight)
+        XCTAssertNotEqual(undirectedOracle, undirectedReversedDifferentWeight)
+        XCTAssertNotEqual(undirectedOracle, undirected2)
+        XCTAssertNotEqual(undirectedOracle, undirected3)
 
-    // Test that we correctly store two directed loops.
-    func testTwoDirectedLoopsRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A"])
-        g.addEdge(from: "A", to: "A", directed: true)
-        g.addEdge(from: "A", to: "A", directed: true)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 0, directed: true),
-            UnweightedEdge(u: 0, v: 0, directed: true)
-            ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1],
-        ])
-    }
-
-    // Test that we correctly store two undirected loops.
-    func testTwoUndirectedLoopsRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A"])
-        g.addEdge(from: "A", to: "A", directed: false)
-        g.addEdge(from: "A", to: "A", directed: false)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 0, directed: false),
-            UnweightedEdge(u: 0, v: 0, directed: false)
-            ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1]
-        ])
-    }
-
-    // Test that we correctly store a directed edge and an undirected edge.
-    func testDirectedAndUndirectedLoopsRepresentation() {
-        let g = UnweightedGraph<String>(vertices: ["A"])
-        g.addEdge(from: "A", to: "A", directed: true)
-        g.addEdge(from: "A", to: "A", directed: false)
-        XCTAssertEqual(g.allEdges, [
-            UnweightedEdge(u: 0, v: 0, directed: true),
-            UnweightedEdge(u: 0, v: 0, directed: false)
-        ])
-        XCTAssertEqual(g.incidenceLists, [
-            [0, 1]
-        ])
-    }
-
-    // Test that we correctly check adjacency for an undirected edge.
-    func testUndirectedEdgeAdjacency() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: false)
-        XCTAssertTrue(g.vertex(withIndex: 0, isAdjacentTo: 1))
-        XCTAssertTrue(g.vertex(withIndex: 1, isAdjacentTo: 0))
-        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
-        XCTAssertTrue(g.vertex("B", isAdjacentTo: "A"))
-        // Test that we don't return false positives
-        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
-        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
-    }
-
-    // Test that we correctly check adjacency for a directed edge.
-    func testDirectedEdgeAdjacency() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "B", directed: true)
-        XCTAssertTrue(g.vertex(withIndex: 0, isAdjacentTo: 1))
-        XCTAssertFalse(g.vertex(withIndex: 1, isAdjacentTo: 0))
-        XCTAssertTrue(g.vertex("A", isAdjacentTo: "B"))
-        XCTAssertFalse(g.vertex("B", isAdjacentTo: "A"))
-        // Test that we don't return false positives
-        XCTAssertFalse(g.vertex("A", isAdjacentTo: "Y"))
-        XCTAssertFalse(g.vertex("X", isAdjacentTo: "Y"))
-    }
-
-    // Test that we check adjacency for the first occurrences of repeated vertices.
-    func testUndirectedEdgeAdjacencyWithRepeatedVertices() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B", "A", "B"])
-        g.addEdge(fromIndex: 2, toIndex: 3, directed: true)
-        XCTAssertFalse(g.vertex("A", isAdjacentTo: "B"))
-        XCTAssertTrue(g.vertex(withIndex: 2, isAdjacentTo: 3))
-    }
-
-    // Test that we correctly check adjacency for an undirected loop.
-    func testUndirectedLoopAdjacency() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "A", directed: false)
-        XCTAssertTrue(g.vertex(withIndex: 0, isAdjacentTo: 0))
-        XCTAssertTrue(g.vertex("A", isAdjacentTo: "A"))
-    }
-
-    // Test that we correctly check adjacency for a directed loop.
-    func testDirectedLoopAdjacency() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        g.addEdge(from: "A", to: "A", directed: true)
-        XCTAssertTrue(g.vertex(withIndex: 0, isAdjacentTo: 0))
-    }
-
-    // Test that we correctly check adjacency when there are no edges.
-    func testAdjacencyWithNoEdges() {
-        let g = UnweightedGraph<String>(vertices: ["A", "B"])
-        XCTAssertFalse(g.vertex("A", isAdjacentTo: "B"))
-        XCTAssertFalse(g.vertex("B", isAdjacentTo: "B"))
+        XCTAssertNotEqual(directedOracle, undirectedOracle)
     }
 }

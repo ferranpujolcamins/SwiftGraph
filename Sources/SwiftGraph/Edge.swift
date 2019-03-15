@@ -28,3 +28,23 @@ public protocol Edge: CustomStringConvertible {
     // Returns an edge with the origin and destination reversed
     func reversed() -> Self
 }
+
+public extension Edge {
+
+    /// Checks that this edge connects two vertices.
+    ///
+    /// This happens when this edge is directed from the initial vertex to the terminal vertex
+    /// or this edge is undirected and incident to both vertices.
+    ///
+    /// - Parameters:
+    ///   - fromIndex: The index of the initial vertex.
+    ///   - toIndex: The index of the terminal vertex.
+    /// - Returns: True if the initial terminal can be reached from the terminal verrtex through this edge only.
+    func connects(fromIndex: Int, toIndex: Int) -> Bool {
+        if directed {
+            return fromIndex == u && toIndex == v
+        } else {
+            return (fromIndex == u && toIndex == v) || (fromIndex == v && toIndex == u)
+        }
+    }
+}

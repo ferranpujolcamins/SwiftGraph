@@ -92,4 +92,32 @@ class WeightedGraphTests: XCTestCase {
             ["BC", "BC"]
         ), "Duplicated edge 'BC' must appear twice.")
     }
+
+    func testWeightsMixed() {
+        let g = WeightedGraph<String, String>(
+            vertices: ["A", "B", "C"]
+        )
+        g.addEdge(from: "A", to: "B", weight: "AB", directed: false)
+        g.addEdge(from: "B", to: "C", weight: "BC", directed: false)
+        g.addEdge(from: "A", to: "B", weight: "AB2", directed: true)
+        g.addEdge(from: "B", to: "C", weight: "BC", directed: false)
+
+        XCTAssertEqual(g.edgeCount, 4, "Wrong number of edges.")
+        XCTAssertTrue(arraysHaveSameElements(
+            g.weights(from: "A", to: "B"),
+            ["AB", "AB2"]
+        ), "Edges from same vertices but different value must both be in the graph.")
+        XCTAssertTrue(arraysHaveSameElements(
+            g.weights(from: "B", to: "A"),
+            ["AB"]
+        ), "Edges from same vertices but different value must both be in the graph.")
+        XCTAssertTrue(arraysHaveSameElements(
+            g.weights(from: "B", to: "C"),
+            ["BC", "BC"]
+        ), "Duplicated edge 'BC' must appear twice.")
+        XCTAssertTrue(arraysHaveSameElements(
+            g.weights(from: "C", to: "B"),
+            ["BC", "BC"]
+        ), "Duplicated edge 'BC' must appear twice.")
+    }
 }
