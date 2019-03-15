@@ -39,6 +39,9 @@
 		B59A0CDF223BB5D400963D30 /* ArrayMutateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A0CDE223BB5D400963D30 /* ArrayMutateTests.swift */; };
 		B59A0CE1223BDC0300963D30 /* VertexRemovalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A0CE0223BDC0300963D30 /* VertexRemovalTests.swift */; };
 		B59A0CE4223BE72C00963D30 /* CycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DCCBF71F8AE2F1001913F7 /* CycleTests.swift */; };
+		B59A0CE7223BF0F300963D30 /* SwiftGraphSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7985B91A1E5A4FCB00C100E7 /* SwiftGraphSearchTests.swift */; };
+		B59A0CE8223BF1BD00963D30 /* MSTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E784271ED2971E003899D0 /* MSTTests.swift */; };
+		B59A0CEA223BF24300963D30 /* SwiftGraphSortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7985B91B1E5A4FCB00C100E7 /* SwiftGraphSortTests.swift */; };
 		B5D022B1217357480079F17C /* ConstructorsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022B0217357480079F17C /* ConstructorsPerformanceTests.swift */; };
 		B5D0AC6D223AC132002E0119 /* AdjacencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D0AC6C223AC132002E0119 /* AdjacencyTests.swift */; };
 		B5D0AC71223ACEE8002E0119 /* UnweightedGraphTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5100A4B208B97A800C7A73A /* UnweightedGraphTests.swift */; };
@@ -573,10 +576,13 @@
 			files = (
 				B59A0CE4223BE72C00963D30 /* CycleTests.swift in Sources */,
 				B5437D56223B180F00A7F1B6 /* EquatableTypes.swift in Sources */,
+				B59A0CE8223BF1BD00963D30 /* MSTTests.swift in Sources */,
 				B5D0AC71223ACEE8002E0119 /* UnweightedGraphTests.swift in Sources */,
 				B59A0CD8223BA6DA00963D30 /* EdgeTests.swift in Sources */,
 				B5437D57223B180F00A7F1B6 /* ArraysHaveSameElements.swift in Sources */,
 				B59A0CD4223B9FA000963D30 /* EdgeRepresentationTests.swift in Sources */,
+				B59A0CE7223BF0F300963D30 /* SwiftGraphSearchTests.swift in Sources */,
+				B59A0CEA223BF24300963D30 /* SwiftGraphSortTests.swift in Sources */,
 				B5D0AC6D223AC132002E0119 /* AdjacencyTests.swift in Sources */,
 				B59A0CE1223BDC0300963D30 /* VertexRemovalTests.swift in Sources */,
 				B5437D55223B129800A7F1B6 /* WeightedGraphTests.swift in Sources */,

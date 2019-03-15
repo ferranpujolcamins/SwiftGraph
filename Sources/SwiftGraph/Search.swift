@@ -48,7 +48,7 @@ public extension Graph {
         let container = Stack<E>()
 
         visited[initalVertexIndex] = true
-        let neighbours = edgesForIndex(initalVertexIndex)
+        let neighbours = edgesForIndex(initalVertexIndex, aligned: true)
         for e in visitOrder(neighbours) {
             if !visited[e.v] {
                 container.push(e)
@@ -66,7 +66,7 @@ public extension Graph {
             }
             if shouldVisitNeighbours {
                 visited[v] = true
-                let neighbours = edgesForIndex(v)
+                let neighbours = edgesForIndex(v, aligned: true)
                 for e in visitOrder(neighbours) {
                     if !visited[e.v] {
                         container.push(e)
@@ -103,7 +103,7 @@ public extension Graph {
         }
         let container = Stack<E>()
 
-        let neighbours = edgesForIndex(initalVertexIndex)
+        let neighbours = edgesForIndex(initalVertexIndex, aligned: true)
         for e in visitOrder(neighbours) {
             container.push(e)
         }
@@ -115,7 +115,7 @@ public extension Graph {
                 return v
             }
             if shouldVisitNeighbours {
-                let neighbours = edgesForIndex(v)
+                let neighbours = edgesForIndex(v, aligned: true)
                 for e in visitOrder(neighbours) {
                     container.push(e)
                 }
@@ -146,7 +146,7 @@ public extension Graph {
                 // figure out route of edges based on pathDict
                 return pathDictToPath(from: fromIndex, to: v, pathDict: pathDict) as! [Self.E]
             }
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     stack.push(e.v)
                     pathDict[e.v] = e
@@ -190,7 +190,7 @@ public extension Graph {
                 // figure out route of edges based on pathDict
                 return pathDictToPath(from: fromIndex, to: toIndex, pathDict: pathDict) as! [Self.E]
             }
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     stack.push(e.v)
                     pathDict[e.v] = e
@@ -237,7 +237,7 @@ public extension Graph {
                 // figure out route of edges based on pathDict
                 paths.append(pathDictToPath(from: fromIndex, to: v, pathDict: pathDict))
             }
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     stack.push(e.v)
                     pathDict[e.v] = e
@@ -287,7 +287,7 @@ public extension Graph {
         let container = Queue<E>()
 
         visited[initalVertexIndex] = true
-        let neighbours = edgesForIndex(initalVertexIndex)
+        let neighbours = edgesForIndex(initalVertexIndex, aligned: true)
         for e in visitOrder(neighbours) {
             if !visited[e.v] {
                 container.push(e)
@@ -302,7 +302,7 @@ public extension Graph {
                 return v
             }
             if shouldVisitNeighbours {
-                let neighbours = edgesForIndex(v)
+                let neighbours = edgesForIndex(v, aligned: true)
                 for e in visitOrder(neighbours) {
                     if !visited[e.v] {
                         container.push(e)
@@ -340,7 +340,7 @@ public extension Graph {
         }
         let container = Queue<E>()
 
-        let neighbours = edgesForIndex(initalVertexIndex)
+        let neighbours = edgesForIndex(initalVertexIndex, aligned: true)
         for e in visitOrder(neighbours) {
             container.push(e)
         }
@@ -352,7 +352,7 @@ public extension Graph {
                 return v
             }
             if shouldVisitNeighbours {
-                let neighbours = edgesForIndex(v)
+                let neighbours = edgesForIndex(v, aligned: true)
                 for e in visitOrder(neighbours) {
                     container.push(e)
                 }
@@ -381,7 +381,7 @@ public extension Graph {
                 return pathDictToPath(from: fromIndex, to: v, pathDict: pathDict) as! [Self.E]
             }
             
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     visited[e.v] = true
                     queue.push(e.v)
@@ -423,7 +423,7 @@ public extension Graph {
                 return pathDictToPath(from: fromIndex, to: toIndex, pathDict: pathDict) as! [Self.E]
             }
             
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     visited[e.v] = true
                     queue.push(e.v)
@@ -468,7 +468,7 @@ public extension Graph {
                 paths.append(pathDictToPath(from: fromIndex, to: v, pathDict: pathDict))
             }
             
-            for e in edgesForIndex(v) {
+            for e in edgesForIndex(v, aligned: true) {
                 if !visited[e.v] {
                     visited[e.v] = true
                     queue.push(e.v)
@@ -512,7 +512,7 @@ public extension WeightedGraph where W: Comparable & Numeric {
         
         while let u = pq.pop()?.vertex { // explore the next closest vertex
             guard let distU = distances[u] else { continue } // should already have seen it
-            for we in edgesForIndex(u)  { // look at every edge/vertex from the vertex in question
+            for we in edgesForIndex(u, aligned: true)  { // look at every edge/vertex from the vertex in question
                 let distV = distances[we.v] // the old distance to this vertex
                 if distV == nil || distV! > we.weight + distU { // if we have no old distance or we found a shorter path
                     distances[we.v] = we.weight + distU // update the distance to this vertex
